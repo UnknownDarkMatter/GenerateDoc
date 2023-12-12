@@ -17,11 +17,11 @@ public class CompositeCollection : CompositeDefinition
     public override string ToString()
     {
         string result = "";
-        foreach(var child in Children)
-        {
-            result += $"{child}\r\n".PadLeft(Level * 3, ' ');
-        }
-        result = "[+]".PadLeft(Level + 1, ' ');
+        //foreach(var child in Children)
+        //{
+        //    result += $"{child}\r\n".PadLeft(Level * 3, ' ');
+        //}
+        result = $"[+] {((Parent is null) ? "" : Parent.ToString())}".PadLeft(Level + 1, ' ');
         return result;
     }
 

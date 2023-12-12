@@ -10,6 +10,6 @@ namespace GenerateDoc.Business.Interfaces;
 public interface IElementParser
 {
     public bool TryParseDeclaration(string fileContent, ref int start, int? end, out ElementDeclaration elementDeclaration);
-    public bool TryParseElement(FileInfo file, int start, int? end, CompositeDefinition parent, out CompositeDefinition element,
+    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent, out CompositeDefinition element,
         out ElementDeclaration elementDeclaration);
 }

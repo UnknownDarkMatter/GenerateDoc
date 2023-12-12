@@ -27,10 +27,9 @@ public abstract class NamedElementParser : IElementParser
 {
     public virtual string ElementName { get; set; }
 
-    public bool TryParseElement(FileInfo file, int start, int? end, CompositeDefinition parent, 
+    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent, 
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
-        var fileContent = File.ReadAllText(file.FullName);
         end = end ?? fileContent.Length -1;
 
         //fileContent = fileContent.Substring(start, (end ?? 0) + 1 - start);
@@ -51,7 +50,7 @@ public abstract class NamedElementParser : IElementParser
 
         if(parseResultBeginSeparatedFromEnd && parseResultBeginAndEnd)
         {
-            if(elementDeclarationTmpBeginAndEnd.ElementStart < elementDeclarationTmpBeginAndEnd.ElementStart)
+            if(elementDeclarationTmpBeginAndEnd.ElementStart < elementDeclarationTmpSeparatedFromEnd.ElementStart)
             {
                 element = elementTmpBeginAndEnd;
                 elementDeclaration = elementDeclarationTmpBeginAndEnd;

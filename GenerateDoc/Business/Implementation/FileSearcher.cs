@@ -33,7 +33,8 @@ public class FileSearcher : IFileSearcher
     {
         foreach(var fi in di.GetFiles())
         {
-            if(_elementParser.TryParseElement(fi, 0, null, null, out CompositeDefinition element, out ElementDeclaration declaration))
+            string fileContent = File.ReadAllText(fi.FullName);
+            if (_elementParser.TryParseElement(fileContent, 0, null, null, out CompositeDefinition element, out ElementDeclaration declaration))
             {
                 occurencies.Add(element);
             }

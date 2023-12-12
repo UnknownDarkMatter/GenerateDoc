@@ -16,26 +16,28 @@ public class RecursiveElementParser : IElementParser
         _elementParser = elementParser ?? throw new ArgumentNullException(nameof(elementParser));
     }
 
-    public bool TryParseElement(FileInfo file, int start, int? end, CompositeDefinition parent, 
+    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent, 
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         var foundElements = new List<CompositeDefinition>();
         var foundDeclarations = new List<ElementDeclaration>();
 
-        while (_elementParser.TryParseElement(file, start, end, parent, out CompositeDefinition currentElement, out ElementDeclaration currentDeclaration))
+        //for each sibblings occurencies
+        while (_elementParser.TryParseElement(fileContent, start, end, parent, out CompositeDefinition currentElement, out ElementDeclaration currentDeclaration))
         {
             if (currentDeclaration.IsBeginAndEnd)
             {
                 foundElements.Add(currentElement);
                 foundDeclarations.Add(currentDeclaration);
-                start = currentDeclaration.ElementStart + currentDeclaration.ElementContent.Length;
+                start = currentDeclaration.ElementEnd.Value;
                 continue;
             }
 
             int childStart = currentDeclaration.ElementStart + currentDeclaration.DeclarationContent.Length;
-            int childEnd = childStart + currentDeclaration.ElementContent.Length;
+            int childEnd = currentDeclaration.ElementEnd.Value;
 
-            while (TryParseElement(file, childStart, childEnd, currentElement, out CompositeDefinition childElement, out ElementDeclaration childDeclaration))
+            //foreach nested occurencies (deepth)
+            while (TryParseElement(fileContent, childStart, childEnd, currentElement, out CompositeDefinition childElement, out ElementDeclaration childDeclaration))
             {
 
                 if (currentElement is CompositeCollection collection)
@@ -49,9 +51,9 @@ public class RecursiveElementParser : IElementParser
                     currentElement = childElementCollection;
                 }
 
-                if (childDeclaration is null) { break; }
-                childStart = childDeclaration.ElementStart + childDeclaration.ElementContent.Length;
-                if (childStart>= childEnd) { break; }
+                //if (childDeclaration is null) { break; }
+                childStart = childDeclaration.ElementEnd.Value;
+                if (childStart >= childEnd) { break; }
                 //if (childDeclaration.IsBeginAndEnd) { break; }
             }
 
@@ -73,7 +75,15 @@ public class RecursiveElementParser : IElementParser
                 var elementCollection = new CompositeCollection(parent);
                 elementCollection.Children.AddRange(foundElements);
                 element = elementCollection;
-                elementDeclaration = null;
+
+                ElementTypeEnum elementType = ElementTypeEnum.Undefined;
+                string declarationContent = foundDeclarations[0].DeclarationContent;
+                int elementStart = foundDeclarations.Min(m=>m.ElementStart);
+                int elementEnd = foundDeclarations.Max(m => m.ElementEnd.Value);
+                string elementContent = fileContent.Substring(elementStart, elementEnd - elementStart + 1);
+                bool isBeginAndEnd = false;
+                elementDeclaration = new ElementDeclaration(elementType, declarationContent, elementContent, 
+                    elementStart, elementEnd, isBeginAndEnd);
             }
             return true;
         }

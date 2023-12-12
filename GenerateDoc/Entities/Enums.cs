@@ -8,6 +8,7 @@ namespace GenerateDoc.Entities
 {
     public enum ElementTypeEnum
     {
+        Undefined = 0,
         Screen = 1,
         Function = 2,
         Rule = 3,
