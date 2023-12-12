@@ -96,14 +96,6 @@ public abstract class NamedElementParser : IElementParser
             return false;
         }
 
-        var fileContentTmp = fileContent.Substring(start, (end ?? 0) + 1 - start);
-        //if (fileContent.Length == 0)
-        //{
-        //    element = null;
-        //    elementDeclaration = null;
-        //    return false;
-        //}
-
         var regex = new Regex($"//@(?<Type>{ElementName})\\((?<Name>[^\\)]+)\\):BeginAndEnd\\.");
 
         var match = regex.Match(fileContent);
@@ -140,14 +132,6 @@ public abstract class NamedElementParser : IElementParser
             elementDeclaration = null;
             return false;
         }
-
-        var fileContentTmp = fileContent.Substring(start, (end ?? 0) + 1 - start);
-        //if (fileContent.Length == 0)
-        //{
-        //    element = null;
-        //    elementDeclaration = null;
-        //    return false;
-        //}
 
         var regexBegin = new Regex($"//@(?<Type>{ElementName})\\((?<Name>[^\\)]+)\\):Begin\\.");
         var matchBegin = regexBegin.Match(fileContent);

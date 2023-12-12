@@ -19,12 +19,33 @@ public class AnyElementParser : IElementParser
     public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent, 
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
+        var elements = new List<CompositeDefinition>();
+        var declarations = new List<ElementDeclaration>();
         foreach (var parser in _allElementParsers)
         {
-            if (parser.TryParseElement(fileContent, start, end, parent, out element, out elementDeclaration))
+            if (parser.TryParseElement(fileContent, start, end, parent, 
+                out CompositeDefinition elementTmp, out ElementDeclaration elementDeclarationTmp ))
             {
-                return true;
+                elements.Add(elementTmp);
+                declarations.Add(elementDeclarationTmp);
             }
+        }
+        if (declarations.Any())
+        {
+            int index = -1;
+            int minPosition = int.MaxValue;
+            for(int i=0;i<declarations.Count;i++)
+            {
+                var declaration = declarations[i];
+                if(declaration.ElementStart< minPosition)
+                {
+                    index = i;
+                    minPosition = declaration.ElementStart;
+                }
+            }
+            element = elements[index];
+            elementDeclaration = declarations[index];
+            return true;
         }
 
         element = null;

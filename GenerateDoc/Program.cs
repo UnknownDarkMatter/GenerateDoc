@@ -17,7 +17,8 @@ Parser.Default.ParseArguments<CommandLineOptions>(args)
         {
             return new RecursiveElementParser(new AnyElementParser(new List<IElementParser>()
             {
-                new ScreenElementParser()
+                new ScreenElementParser(),
+                new FunctionElementParser(),
             }));
         });
         builder.Services.AddSingleton<IFileSearcher, FileSearcher>();
