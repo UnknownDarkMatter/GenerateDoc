@@ -20,6 +20,7 @@ Parser.Default.ParseArguments<CommandLineOptions>(args)
                 new ScreenElementParser()
             }));
         });
+        builder.Services.AddSingleton<IFileSearcher, FileSearcher>();
         builder.Services.AddSingleton<IDocumentationGenerator, DocumentationGenerator>();
         builder.Services.AddSingleton((serviceProvider) => { return o; });
 

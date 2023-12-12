@@ -9,9 +9,18 @@ namespace GenerateDoc.Entities;
 public class CompositeElement : CompositeDefinition
 {
     public ElementTypeEnum ElementType;
-    public CompositeElement(ElementTypeEnum elementType, CompositeDefinition parent):base(parent)
+    public string Name;
+
+    public CompositeElement(ElementTypeEnum elementType, string name,
+        CompositeDefinition parent):base(parent)
     {
         ElementType = elementType;
+        Name = name;
+    }
+
+    public override string ToString()
+    {
+        return $"{ElementType}-{Name}".PadLeft(Level * 3, ' ');
     }
 
 }

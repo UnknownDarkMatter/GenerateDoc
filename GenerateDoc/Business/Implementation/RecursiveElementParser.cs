@@ -20,31 +20,45 @@ public class RecursiveElementParser : IElementParser
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         var foundElements = new List<CompositeDefinition>();
+        var foundDeclarations = new List<ElementDeclaration>();
 
         while (_elementParser.TryParseElement(file, start, end, parent, out CompositeDefinition currentElement, out ElementDeclaration currentDeclaration))
         {
-            int childStart = start;
+            if (currentDeclaration.IsBeginAndEnd)
+            {
+                foundElements.Add(currentElement);
+                foundDeclarations.Add(currentDeclaration);
+                start = currentDeclaration.ElementStart + currentDeclaration.ElementContent.Length;
+                continue;
+            }
+
+            int childStart = currentDeclaration.ElementStart + currentDeclaration.DeclarationContent.Length;
             int childEnd = childStart + currentDeclaration.ElementContent.Length;
+
             while (TryParseElement(file, childStart, childEnd, currentElement, out CompositeDefinition childElement, out ElementDeclaration childDeclaration))
             {
+
                 if (currentElement is CompositeCollection collection)
                 {
                     collection.Children.Add(childElement);
                 }
                 else
                 {
-                    var childElementCollection = new CompositeCollection(parent);
+                    var childElementCollection = new CompositeCollection(currentElement);
                     childElementCollection.Children.Add(childElement);
                     currentElement = childElementCollection;
                 }
 
+                if (childDeclaration is null) { break; }
                 childStart = childDeclaration.ElementStart + childDeclaration.ElementContent.Length;
                 if (childStart>= childEnd) { break; }
+                //if (childDeclaration.IsBeginAndEnd) { break; }
             }
 
             foundElements.Add(currentElement);
+            foundDeclarations.Add(currentDeclaration);
 
-            start = currentDeclaration.ElementStart + currentDeclaration.ElementContent.Length;
+            start = currentDeclaration.ElementEnd ?? currentDeclaration.ElementStart + currentDeclaration.DeclarationContent.Length;
         }
 
         if (foundElements.Any())
@@ -52,14 +66,15 @@ public class RecursiveElementParser : IElementParser
             if (foundElements.Count == 1)
             {
                 element = foundElements[0];
+                elementDeclaration = foundDeclarations[0];
             }
             else
             {
                 var elementCollection = new CompositeCollection(parent);
                 elementCollection.Children.AddRange(foundElements);
                 element = elementCollection;
+                elementDeclaration = null;
             }
-            elementDeclaration = null;
             return true;
         }
 

@@ -2,7 +2,7 @@
   "profiles": {
     "GenerateDoc": {
       "commandName": "Project",
-      "commandLineArgs": "-s \"C:\\DataSeb\\sources\\UnknownDarkMatter\\tmp\\DistribueMonnaie-main\" -o \"C:\\DataSeb\\sources\\UnknownDarkMatter\\tmp\\doc\" -d \"https://tfs.siemens.fr/App_Collection/HABILITATION_SIGNATURES/_versionControl?path=%24%2FHABILITATION_SIGNATURES%2FDev%2\""
+      "commandLineArgs": "-s \"C:\\DataSeb\\sources\\UnknownDarkMatter\\tmp\\DistribueMonnaie-main\\DistribueMonnaie\" -o \"C:\\DataSeb\\sources\\UnknownDarkMatter\\tmp\\doc\" -d \"https://tfs.siemens.fr/App_Collection/HABILITATION_SIGNATURES/_versionControl?path=%24%2FHABILITATION_SIGNATURES%2FDev%2\""
     }
   }
 }

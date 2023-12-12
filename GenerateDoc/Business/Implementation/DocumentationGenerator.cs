@@ -10,15 +10,15 @@ namespace GenerateDoc.Business.Implementation;
 
 public class DocumentationGenerator : IDocumentationGenerator
 {
-    private readonly CommandLineOptions _commandLineOptions;
+    private readonly IFileSearcher _fileSearcher;
 
-    public DocumentationGenerator(CommandLineOptions commandLineOptions)
+    public DocumentationGenerator(IFileSearcher fileSearcher)
     {
-        _commandLineOptions = commandLineOptions ?? throw new ArgumentNullException(nameof(commandLineOptions));
+        _fileSearcher = fileSearcher ?? throw new ArgumentNullException(nameof(fileSearcher));
     }
 
     public void GenerateDocumentation()
     {
-
+        var elements = _fileSearcher.FindAll();
     }
 }
