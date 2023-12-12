@@ -1,5 +1,7 @@
 ﻿using CommandLine;
 using GenerateDoc.Business.Implementation;
+using GenerateDoc.Business.Implementation.Aggregation;
+using GenerateDoc.Business.Implementation.Parsing;
 using GenerateDoc.Business.Interfaces;
 using GenerateDoc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,10 +21,13 @@ Parser.Default.ParseArguments<CommandLineOptions>(args)
             {
                 new ScreenElementParser(),
                 new FunctionElementParser(),
+                new RuleElementParser(),
+                new TagElementParser(),
             }));
         });
         builder.Services.AddSingleton<IFileSearcher, FileSearcher>();
         builder.Services.AddSingleton<IDocumentationGenerator, DocumentationGenerator>();
+        builder.Services.AddSingleton<ICompositeAggregator, CompositeAggregator>();
         builder.Services.AddSingleton((serviceProvider) => { return o; });
 
         using IHost host = builder.Build();

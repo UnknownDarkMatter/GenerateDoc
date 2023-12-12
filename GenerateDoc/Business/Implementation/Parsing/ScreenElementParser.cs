@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GenerateDoc.Business.Implementation;
+namespace GenerateDoc.Business.Implementation.Parsing;
 
 public class ScreenElementParser : NamedElementParser
 {
-    public override string ElementName {
+    public override string ElementName
+    {
         get
         {
             return "Ecran";
-        } 
+        }
     }
 }

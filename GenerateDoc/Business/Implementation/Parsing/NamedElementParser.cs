@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace GenerateDoc.Business.Implementation;
+namespace GenerateDoc.Business.Implementation.Parsing;
 
 /// <summary>
 /// Exemple de déclaration :
@@ -27,10 +27,10 @@ public abstract class NamedElementParser : IElementParser
 {
     public virtual string ElementName { get; set; }
 
-    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent, 
+    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent,
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
-        end = end ?? fileContent.Length -1;
+        end = end ?? fileContent.Length - 1;
 
         //fileContent = fileContent.Substring(start, (end ?? 0) + 1 - start);
         //if(fileContent.Length == 0)
@@ -48,9 +48,9 @@ public abstract class NamedElementParser : IElementParser
         var parseResultBeginAndEnd = TryParseElementBeginAndEnd(fileContent, start, end, parent,
             out CompositeDefinition elementTmpBeginAndEnd, out ElementDeclaration elementDeclarationTmpBeginAndEnd);
 
-        if(parseResultBeginSeparatedFromEnd && parseResultBeginAndEnd)
+        if (parseResultBeginSeparatedFromEnd && parseResultBeginAndEnd)
         {
-            if(elementDeclarationTmpBeginAndEnd.ElementStart < elementDeclarationTmpSeparatedFromEnd.ElementStart)
+            if (elementDeclarationTmpBeginAndEnd.ElementStart < elementDeclarationTmpSeparatedFromEnd.ElementStart)
             {
                 element = elementTmpBeginAndEnd;
                 elementDeclaration = elementDeclarationTmpBeginAndEnd;
@@ -126,7 +126,7 @@ public abstract class NamedElementParser : IElementParser
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         end = end ?? fileContent.Length - 1;
-        if(end <= start)
+        if (end <= start)
         {
             element = null;
             elementDeclaration = null;

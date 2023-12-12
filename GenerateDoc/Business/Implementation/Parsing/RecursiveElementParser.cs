@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GenerateDoc.Business.Implementation;
+namespace GenerateDoc.Business.Implementation.Parsing;
 
 public class RecursiveElementParser : IElementParser
 {
@@ -16,7 +16,7 @@ public class RecursiveElementParser : IElementParser
         _elementParser = elementParser ?? throw new ArgumentNullException(nameof(elementParser));
     }
 
-    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent, 
+    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent,
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         var foundElements = new List<CompositeDefinition>();
@@ -78,11 +78,11 @@ public class RecursiveElementParser : IElementParser
 
                 ElementTypeEnum elementType = ElementTypeEnum.Undefined;
                 string declarationContent = foundDeclarations[0].DeclarationContent;
-                int elementStart = foundDeclarations.Min(m=>m.ElementStart);
+                int elementStart = foundDeclarations.Min(m => m.ElementStart);
                 int elementEnd = foundDeclarations.Max(m => m.ElementEnd.Value);
                 string elementContent = fileContent.Substring(elementStart, elementEnd - elementStart + 1);
                 bool isBeginAndEnd = false;
-                elementDeclaration = new ElementDeclaration(elementType, declarationContent, elementContent, 
+                elementDeclaration = new ElementDeclaration(elementType, declarationContent, elementContent,
                     elementStart, elementEnd, isBeginAndEnd);
             }
             return true;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GenerateDoc.Business.Implementation;
+namespace GenerateDoc.Business.Implementation.Parsing;
 
 public class AnyElementParser : IElementParser
 {
@@ -16,15 +16,15 @@ public class AnyElementParser : IElementParser
         _allElementParsers = allElementParsers ?? throw new ArgumentNullException(nameof(allElementParsers));
     }
 
-    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent, 
+    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent,
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         var elements = new List<CompositeDefinition>();
         var declarations = new List<ElementDeclaration>();
         foreach (var parser in _allElementParsers)
         {
-            if (parser.TryParseElement(fileContent, start, end, parent, 
-                out CompositeDefinition elementTmp, out ElementDeclaration elementDeclarationTmp ))
+            if (parser.TryParseElement(fileContent, start, end, parent,
+                out CompositeDefinition elementTmp, out ElementDeclaration elementDeclarationTmp))
             {
                 elements.Add(elementTmp);
                 declarations.Add(elementDeclarationTmp);
@@ -34,10 +34,10 @@ public class AnyElementParser : IElementParser
         {
             int index = -1;
             int minPosition = int.MaxValue;
-            for(int i=0;i<declarations.Count;i++)
+            for (int i = 0; i < declarations.Count; i++)
             {
                 var declaration = declarations[i];
-                if(declaration.ElementStart< minPosition)
+                if (declaration.ElementStart < minPosition)
                 {
                     index = i;
                     minPosition = declaration.ElementStart;
