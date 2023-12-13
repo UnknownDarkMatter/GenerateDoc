@@ -14,6 +14,17 @@ public class CompositeCollection : CompositeDefinition
     {
         Children = new List<CompositeDefinition>();
     }
+
+    public override CompositeDefinition Search(CompositeElement searched)
+    {
+        foreach(var child in Children)
+        {
+            var found = child.Search(searched);
+            if (found != null) return found;
+        }
+        return null;
+    }
+
     public override string ToString()
     {
         string result = "[";

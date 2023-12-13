@@ -37,6 +37,11 @@ public class CompositeDefinition
         Parent = parent;
     }
 
+    public virtual CompositeDefinition Search(CompositeElement searched)
+    {
+        return null;
+    }
+
     public override string ToString()
     {
         return base.ToString();

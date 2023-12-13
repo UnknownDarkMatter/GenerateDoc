@@ -18,6 +18,15 @@ public class CompositeElement : CompositeDefinition
         Name = name;
     }
 
+    public override CompositeDefinition Search(CompositeElement searched)
+    {
+        if( searched.Name == this.Name && searched.ElementType == this.ElementType)
+        {
+            return this;
+        }
+        return null;
+    }
+
     public override string ToString()
     {
         return $"{ElementType}-{Name}".PadLeft(Level * 3, ' ');

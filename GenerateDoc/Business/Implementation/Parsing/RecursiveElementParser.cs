@@ -67,10 +67,7 @@ public class RecursiveElementParser : IElementParser
                     currentElement = currentElementCollection;
                 }
 
-                //if (childDeclaration is null) { break; }
                 childStart = childDeclaration.ElementEnd.Value;
-                //if (childStart >= childEnd) { break; }
-                //if (childDeclaration.IsBeginAndEnd) { break; }
             }
 
             foundElements.Add(currentElement);
