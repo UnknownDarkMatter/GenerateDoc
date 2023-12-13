@@ -53,7 +53,7 @@ public class RecursiveElementParser : IElementParser
 
                 //if (childDeclaration is null) { break; }
                 childStart = childDeclaration.ElementEnd.Value;
-                if (childStart >= childEnd) { break; }
+                //if (childStart >= childEnd) { break; }
                 //if (childDeclaration.IsBeginAndEnd) { break; }
             }
 

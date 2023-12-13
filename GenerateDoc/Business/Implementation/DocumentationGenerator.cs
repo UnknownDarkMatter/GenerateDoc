@@ -22,6 +22,6 @@ public class DocumentationGenerator : IDocumentationGenerator
     public void GenerateDocumentation()
     {
         var elements = _fileSearcher.FindAll();
-        elements = _compositeAggregator.Aggregate(elements);
+        var elementsAggregated = _compositeAggregator.Aggregate(elements);
     }
 }

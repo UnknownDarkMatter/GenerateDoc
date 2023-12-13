@@ -9,5 +9,5 @@ namespace GenerateDoc.Business.Interfaces;
 
 public interface ICompositeAggregator
 {
-    public IEnumerable<CompositeDefinition> Aggregate(IEnumerable<CompositeDefinition> compositeDefinitions);
+    public CompositeDefinition Aggregate(IEnumerable<CompositeDefinition> compositeDefinitions);
 }
