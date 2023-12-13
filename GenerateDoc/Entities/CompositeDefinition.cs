@@ -23,6 +23,13 @@ public class CompositeDefinition
         }
     }
 
+    public CompositeDefinition Root
+    {
+        get { 
+            return Parent == null ? this : Parent.Root; 
+        }
+    }
+
     public CompositeDefinition Parent { get; set; }
 
     public CompositeDefinition(CompositeDefinition parent)

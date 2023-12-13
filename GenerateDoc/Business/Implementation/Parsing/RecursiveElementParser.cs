@@ -39,16 +39,32 @@ public class RecursiveElementParser : IElementParser
             //foreach nested occurencies (deepth)
             while (TryParseElement(fileContent, childStart, childEnd, currentElement, out CompositeDefinition childElement, out ElementDeclaration childDeclaration))
             {
-
+                if(currentElement.Parent is null)
+                {
+                    var rootCollection = new CompositeCollection(null);
+                    rootCollection.Children.Add(currentElement);
+                    currentElement.Parent = rootCollection;
+                    var nestedElementCollection = new  CompositeCollection(rootCollection);
+                    rootCollection.Children.Add(nestedElementCollection);
+                    currentElement = nestedElementCollection;
+                }
                 if (currentElement is CompositeCollection collection)
                 {
                     collection.Children.Add(childElement);
                 }
                 else
                 {
-                    var childElementCollection = new CompositeCollection(currentElement);
+                    var currentElementCollection = new CompositeCollection(currentElement.Parent);
+                    currentElementCollection.Children.Add(currentElement);
+                    currentElement.Parent = currentElementCollection;
+
+                    var childElementCollection = new CompositeCollection(currentElementCollection);
                     childElementCollection.Children.Add(childElement);
-                    currentElement = childElementCollection;
+                    childElement.Parent = childElementCollection;
+
+                    currentElementCollection.Children.Add(childElementCollection);
+
+                    currentElement = currentElementCollection;
                 }
 
                 //if (childDeclaration is null) { break; }

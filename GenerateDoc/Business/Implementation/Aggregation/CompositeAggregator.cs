@@ -43,8 +43,9 @@ public class CompositeAggregator : ICompositeAggregator
     public CompositeDefinition Aggregate(IEnumerable<CompositeDefinition> compositeDefinitions)
     {
         var newList = new CompositeCollection(null);
-        CompactList(compositeDefinitions.First(), newList);
-        return newList;
+        //CompactList(compositeDefinitions.First(), newList);
+        //return newList;
+        return compositeDefinitions.First();
     }
 
     private void CompactList(CompositeDefinition currentElement, CompositeCollection newList)
@@ -55,12 +56,12 @@ public class CompositeAggregator : ICompositeAggregator
         }
         if(currentElement is CompositeCollection collection)
         {
-            var parentollection = new CompositeCollection(newList);
-            newList.Children.Add(parentollection);
-            parentollection.Children.Add(currentElement.Parent);
+            //var parentollection = new CompositeCollection(newList);
+            //newList.Children.Add(parentollection);
+            //parentollection.Children.Add(currentElement.Parent);
 
-            var childCollection = new CompositeCollection(parentollection);
-            parentollection.Children.Add(childCollection);
+            var childCollection = new CompositeCollection(newList);
+            newList.Children.Add(childCollection);
             foreach (var elementTmp in collection.Children)
             {
                 CompactList(elementTmp, childCollection);

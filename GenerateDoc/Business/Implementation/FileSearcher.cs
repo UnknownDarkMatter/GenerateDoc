@@ -36,6 +36,7 @@ public class FileSearcher : IFileSearcher
             string fileContent = File.ReadAllText(fi.FullName);
             if (_elementParser.TryParseElement(fileContent, 0, null, null, out CompositeDefinition element, out ElementDeclaration declaration))
             {
+                element = element.Root;
                 occurencies.Add(element);
             }
         }

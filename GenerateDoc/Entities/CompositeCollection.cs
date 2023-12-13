@@ -16,7 +16,7 @@ public class CompositeCollection : CompositeDefinition
     }
     public override string ToString()
     {
-        string result = "";
+        string result = "[";
         foreach (var child in Children)
         {
             if(child is CompositeElement element)
@@ -25,9 +25,10 @@ public class CompositeCollection : CompositeDefinition
             }
             else
             {
-                result += $"[+]";
+                result += "(...),";
             }
         }
+        result += "]";
         return result;
     }
 
