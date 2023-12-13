@@ -10,12 +10,14 @@ public class CompositeElement : CompositeDefinition
 {
     public ElementTypeEnum ElementType;
     public string Name;
+    public string Description { get; set; }
 
-    public CompositeElement(ElementTypeEnum elementType, string name,
+    public CompositeElement(ElementTypeEnum elementType, string name, string description,
         CompositeDefinition parent):base(parent)
     {
         ElementType = elementType;
         Name = name;
+        Description = description;
     }
 
     public override CompositeDefinition Search(CompositeElement searched)

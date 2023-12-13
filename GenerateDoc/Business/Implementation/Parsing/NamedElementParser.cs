@@ -16,8 +16,9 @@ namespace GenerateDoc.Business.Implementation.Parsing;
 ///      //@Ecran(Ecran 1.1):Begin
 ///      //@Ecran(Ecran 1.1.1):Begin
 ///      //@Ecran(Ecran 1.1.1):End
-///      //@Ecran(Ecran 1.1.2):Begin
 ///      //@Ecran(Ecran 1.1.2.1):BeginAndEnd
+///      //@Ecran(Ecran 1.1.2),Description=toto en vacances:Begin
+///      //@Ecran(Ecran 1.1.2.1),Description=toto a la plage:BeginAndEnd
 ///      //@Ecran(Ecran 1.1.2):End
 ///      //@Ecran(Ecran 1.1):End
 ///      //@Ecran(Ecran 1.2):BeginAndEnd
@@ -31,16 +32,6 @@ public abstract class NamedElementParser : IElementParser
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         end = end ?? fileContent.Length - 1;
-
-        //fileContent = fileContent.Substring(start, (end ?? 0) + 1 - start);
-        //if(fileContent.Length == 0)
-        //{
-        //    element = null;
-        //    elementDeclaration = null;
-        //    return false;
-        //}
-        //start = 0;
-        //end = fileContent.Length - 1;
 
         var parseResultBeginSeparatedFromEnd = TryParseElementBeginSeparatedFromEnd(fileContent, start, end, parent,
             out CompositeDefinition elementTmpSeparatedFromEnd, out ElementDeclaration elementDeclarationTmpSeparatedFromEnd);
@@ -96,7 +87,7 @@ public abstract class NamedElementParser : IElementParser
             return false;
         }
 
-        var regex = new Regex($"//@(?<Type>{ElementName})\\((?<Name>[^\\)]+)\\):BeginAndEnd\\.");
+        var regex = new Regex($"//@(?<Type>{ElementName})\\((?<Name>[^\\)]+)\\)(,Description=(?<Description>.*))*:BeginAndEnd\\.");
 
         var match = regex.Match(fileContent);
         while (match.Success && (match.Index < start || match.Index >= end))
@@ -106,8 +97,9 @@ public abstract class NamedElementParser : IElementParser
         if (match.Success)
         {
             var name = match.Groups["Name"].Value;
+            var description = match.Groups["Description"]?.Value;
             var elementType = ElementTypeMapper.Map(match.Groups["Type"].Value);
-            element = new CompositeElement(elementType, name, parent);
+            element = new CompositeElement(elementType, name, description, parent);
 
             int elementStart = match.Index;
             int? elementEnd = match.Index + match.Value.Length;
@@ -133,7 +125,7 @@ public abstract class NamedElementParser : IElementParser
             return false;
         }
 
-        var regexBegin = new Regex($"//@(?<Type>{ElementName})\\((?<Name>[^\\)]+)\\):Begin\\.");
+        var regexBegin = new Regex($"//@(?<Type>{ElementName})\\((?<Name>[^\\)]+)\\)(,Description=(?<Description>.*))*:Begin\\.");
         var matchBegin = regexBegin.Match(fileContent);
         while (matchBegin.Success && matchBegin.Index < start)
         {
@@ -142,6 +134,7 @@ public abstract class NamedElementParser : IElementParser
         if (matchBegin.Success)
         {
             var name = matchBegin.Groups["Name"].Value;
+            var description = matchBegin.Groups["Description"]?.Value;
 
             var regexEnd = new Regex($"//@{ElementName}\\({name}\\):End\\.");
             var matchEnd = regexEnd.Match(fileContent);
@@ -150,10 +143,10 @@ public abstract class NamedElementParser : IElementParser
             {
                 matchEnd = matchEnd.NextMatch();
             }
-            if (matchEnd.Success)
+            if (matchEnd.Success && matchBegin.Index < matchEnd.Index)
             {
                 var elementType = ElementTypeMapper.Map(matchBegin.Groups["Type"].Value);
-                element = new CompositeElement(elementType, name, parent);
+                element = new CompositeElement(elementType, name, description, parent);
 
                 string declarationContent = matchBegin.Value;
                 int elementStart = matchBegin.Index;
