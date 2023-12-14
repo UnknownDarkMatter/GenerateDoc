@@ -16,14 +16,14 @@ public class AnyElementParser : IElementParser
         _allElementParsers = allElementParsers ?? throw new ArgumentNullException(nameof(allElementParsers));
     }
 
-    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent,
+    public bool TryParseElement(string fileContent, FileInfo fi, int start, int? end, CompositeDefinition parent,
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         var elements = new List<CompositeDefinition>();
         var declarations = new List<ElementDeclaration>();
         foreach (var parser in _allElementParsers)
         {
-            if (parser.TryParseElement(fileContent, start, end, parent,
+            if (parser.TryParseElement(fileContent, fi, start, end, parent,
                 out CompositeDefinition elementTmp, out ElementDeclaration elementDeclarationTmp))
             {
                 elements.Add(elementTmp);

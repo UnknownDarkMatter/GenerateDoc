@@ -16,14 +16,14 @@ public class RecursiveElementParser : IElementParser
         _elementParser = elementParser ?? throw new ArgumentNullException(nameof(elementParser));
     }
 
-    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent,
+    public bool TryParseElement(string fileContent, FileInfo fi, int start, int? end, CompositeDefinition parent,
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         var foundElements = new List<CompositeDefinition>();
         var foundDeclarations = new List<ElementDeclaration>();
 
         //for each sibblings occurencies
-        while (_elementParser.TryParseElement(fileContent, start, end, parent, out CompositeDefinition currentElement, out ElementDeclaration currentDeclaration))
+        while (_elementParser.TryParseElement(fileContent, fi, start, end, parent, out CompositeDefinition currentElement, out ElementDeclaration currentDeclaration))
         {
             if (currentDeclaration.IsBeginAndEnd)
             {
@@ -37,7 +37,7 @@ public class RecursiveElementParser : IElementParser
             int childEnd = currentDeclaration.ElementEnd.Value;
 
             //foreach nested occurencies (deepth)
-            while (TryParseElement(fileContent, childStart, childEnd, currentElement, out CompositeDefinition childElement, out ElementDeclaration childDeclaration))
+            while (TryParseElement(fileContent, fi, childStart, childEnd, currentElement, out CompositeDefinition childElement, out ElementDeclaration childDeclaration))
             {
                 if(currentElement.Parent is null)
                 {

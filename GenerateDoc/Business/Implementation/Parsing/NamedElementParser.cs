@@ -28,15 +28,15 @@ public abstract class NamedElementParser : IElementParser
 {
     public virtual string ElementName { get; set; }
 
-    public bool TryParseElement(string fileContent, int start, int? end, CompositeDefinition parent,
+    public bool TryParseElement(string fileContent, FileInfo fi, int start, int? end, CompositeDefinition parent,
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         end = end ?? fileContent.Length - 1;
 
-        var parseResultBeginSeparatedFromEnd = TryParseElementBeginSeparatedFromEnd(fileContent, start, end, parent,
+        var parseResultBeginSeparatedFromEnd = TryParseElementBeginSeparatedFromEnd(fileContent, fi, start, end, parent,
             out CompositeDefinition elementTmpSeparatedFromEnd, out ElementDeclaration elementDeclarationTmpSeparatedFromEnd);
 
-        var parseResultBeginAndEnd = TryParseElementBeginAndEnd(fileContent, start, end, parent,
+        var parseResultBeginAndEnd = TryParseElementBeginAndEnd(fileContent, fi, start, end, parent,
             out CompositeDefinition elementTmpBeginAndEnd, out ElementDeclaration elementDeclarationTmpBeginAndEnd);
 
         if (parseResultBeginSeparatedFromEnd && parseResultBeginAndEnd)
@@ -76,7 +76,7 @@ public abstract class NamedElementParser : IElementParser
         throw new NotImplementedException();
     }
 
-    public bool TryParseElementBeginAndEnd(string fileContent, int start, int? end, CompositeDefinition parent,
+    public bool TryParseElementBeginAndEnd(string fileContent, FileInfo fi, int start, int? end, CompositeDefinition parent,
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         end = end ?? fileContent.Length - 1;
@@ -99,7 +99,7 @@ public abstract class NamedElementParser : IElementParser
             var name = match.Groups["Name"].Value;
             var description = match.Groups["Description"]?.Value;
             var elementType = ElementTypeMapper.Map(match.Groups["Type"].Value);
-            element = new CompositeElement(elementType, name, description, parent);
+            element = new CompositeElement(elementType, name, description, fi, match.Index, parent);
 
             int elementStart = match.Index;
             int? elementEnd = match.Index + match.Value.Length;
@@ -114,7 +114,7 @@ public abstract class NamedElementParser : IElementParser
         return false;
     }
 
-    public bool TryParseElementBeginSeparatedFromEnd(string fileContent, int start, int? end, CompositeDefinition parent,
+    public bool TryParseElementBeginSeparatedFromEnd(string fileContent, FileInfo fi, int start, int? end, CompositeDefinition parent,
         out CompositeDefinition element, out ElementDeclaration elementDeclaration)
     {
         end = end ?? fileContent.Length - 1;
@@ -146,7 +146,7 @@ public abstract class NamedElementParser : IElementParser
             if (matchEnd.Success)
             {
                 var elementType = ElementTypeMapper.Map(matchBegin.Groups["Type"].Value);
-                element = new CompositeElement(elementType, name, description, parent);
+                element = new CompositeElement(elementType, name, description, fi, matchBegin.Index, parent);
 
                 string declarationContent = matchBegin.Value;
                 int elementStart = matchBegin.Index;
