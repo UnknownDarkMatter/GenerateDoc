@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace GenerateDoc.Entities;
 
-public class CompositeElement : CompositeDefinition
+public class CompositeAggregation : CompositeDefinition
 {
-
     public ElementDetails ElementDetails { get; set; }
-    public SourceCodeDetails SourceCodeDetails { get; set; }
-
-    public CompositeElement(ElementTypeEnum elementType, string name, string description,
-        FileInfo file, int line,
-        CompositeDefinition parent):base(parent)
+    public Dictionary<SourceCodeDetails, List<CompositeDefinition>> Children { get; set; }
+    
+    public CompositeAggregation(ElementTypeEnum elementType, string name, string description,
+        CompositeDefinition parent) : base(parent)
     {
         ElementDetails = new ElementDetails(elementType, name, description);
-        SourceCodeDetails = new SourceCodeDetails(file, line);
+        Children = new Dictionary<SourceCodeDetails, List<CompositeDefinition>>();
     }
 
     public override CompositeDefinition Search(CompositeElement searched)
@@ -31,7 +30,7 @@ public class CompositeElement : CompositeDefinition
 
     public override string ToString()
     {
-        return $"{ElementDetails}".PadLeft(Level * 3, ' ');
+        return $"Group : {ElementDetails}";
     }
 
 }

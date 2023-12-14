@@ -32,7 +32,7 @@ public class CompositeCollection : CompositeDefinition
         {
             if(child is CompositeElement element)
             {
-                result += $"{element.Name},";
+                result += $"{element.ElementDetails.Name},";
             }
             else
             {
