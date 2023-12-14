@@ -43,7 +43,12 @@ public class CompositeAggregator : ICompositeAggregator
     public CompositeDefinition Aggregate(IEnumerable<CompositeDefinition> compositeDefinitions)
     {
         var newList = new CompositeCollection(null);
-        AggregateList(compositeDefinitions.First(), newList);
+        var root = compositeDefinitions.FirstOrDefault();
+        if(root is null)
+        {
+            return newList;
+        }
+        AggregateList(root, newList);
         return newList;
     }
 

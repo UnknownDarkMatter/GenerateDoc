@@ -139,11 +139,11 @@ public abstract class NamedElementParser : IElementParser
             var regexEnd = new Regex($"//@{ElementName}\\({name}\\):End\\.");
             var matchEnd = regexEnd.Match(fileContent);
 
-            while (matchEnd.Success && matchEnd.Index >= end)
+            while (matchEnd.Success && (matchEnd.Index >= end || matchBegin.Index >= matchEnd.Index))
             {
                 matchEnd = matchEnd.NextMatch();
             }
-            if (matchEnd.Success && matchBegin.Index < matchEnd.Index)
+            if (matchEnd.Success)
             {
                 var elementType = ElementTypeMapper.Map(matchBegin.Groups["Type"].Value);
                 element = new CompositeElement(elementType, name, description, parent);
