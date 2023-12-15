@@ -44,7 +44,7 @@ public class RecursiveElementParser : IElementParser
                     var rootCollection = new CompositeCollection(null);
                     rootCollection.Children.Add(currentElement);
                     currentElement.Parent = rootCollection;
-                    var nestedElementCollection = new  CompositeCollection(rootCollection);
+                    var nestedElementCollection = new CompositeCollection(rootCollection);
                     rootCollection.Children.Add(nestedElementCollection);
                     currentElement = nestedElementCollection;
                 }
@@ -88,6 +88,10 @@ public class RecursiveElementParser : IElementParser
                 var elementCollection = new CompositeCollection(parent);
                 elementCollection.Children.AddRange(foundElements);
                 element = elementCollection;
+                foreach(var  childElement in foundElements)
+                {
+                    childElement.Parent = elementCollection;
+                }
 
                 ElementTypeEnum elementType = ElementTypeEnum.Undefined;
                 string declarationContent = foundDeclarations[0].DeclarationContent;

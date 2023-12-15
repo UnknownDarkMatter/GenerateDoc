@@ -32,9 +32,12 @@ public class CompositeDefinition
 
     public CompositeDefinition Parent { get; set; }
 
+    public Guid Id { get; }
+
     public CompositeDefinition(CompositeDefinition parent)
     {
         Parent = parent;
+        Id = Guid.NewGuid();
     }
 
     public virtual CompositeDefinition Search(CompositeElement searched)

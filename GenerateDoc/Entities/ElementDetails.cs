@@ -23,7 +23,7 @@ public class ElementDetails : IEquatable<ElementDetails>
 
     public bool Equals(ElementDetails? other)
     {
-        return ElementType == other.ElementType && Name == other.Name && Description == other.Description;
+        return ElementType == other.ElementType && Name == other.Name;
     }
 
     public override string ToString()

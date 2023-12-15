@@ -56,7 +56,42 @@ public class CompositeAggregator : ICompositeAggregator
     {
         if(currentElement is CompositeElement element)
         {
-            newList.Children.Add(element);
+            var existingElement = newList.Root.Search(element);
+            if (existingElement != null)
+            {
+                var currentElementParentCollection = currentElement.Parent as CompositeCollection;
+                if (existingElement is CompositeAggregation aggregation)
+                {
+                    aggregation.Children.Add(element, 
+                        currentElementParentCollection.Children.Where(m=>m.Id != existingElement.Id).ToList());
+                }
+                else
+                {
+                    var newAggregation = new CompositeAggregation(element.ElementDetails, newList);
+                    foreach (var child in currentElementParentCollection.Children)
+                    {
+                        if(child is CompositeElement aggregatedChildElement 
+                            && aggregatedChildElement.ElementDetails.Equals(element.ElementDetails))
+                        {
+                            newAggregation.Children.Add(aggregatedChildElement,
+                                ((CompositeCollection)aggregatedChildElement.Parent).Children
+                                    .Where(m=> m.Id != aggregatedChildElement.Id
+                                                && !(m is CompositeElement identicalChild 
+                                                    && identicalChild.ElementDetails.Equals(aggregatedChildElement.ElementDetails)))
+                                    .ToList());
+                        }
+                    }
+                    newList.Children.Add(newAggregation);
+                    newList.Children = newList.Children
+                        .Where(m=> !(m is CompositeElement identicalChild
+                                     && identicalChild.ElementDetails.Equals(element.ElementDetails)))
+                        .ToList();
+                }
+            }
+            else
+            {
+                newList.Children.Add(element);
+            }
         }
         if(currentElement is CompositeCollection collection)
         {

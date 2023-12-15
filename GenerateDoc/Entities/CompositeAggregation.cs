@@ -10,13 +10,13 @@ namespace GenerateDoc.Entities;
 public class CompositeAggregation : CompositeDefinition
 {
     public ElementDetails ElementDetails { get; set; }
-    public Dictionary<SourceCodeDetails, List<CompositeDefinition>> Children { get; set; }
+    public Dictionary<CompositeElement, List<CompositeDefinition>> Children { get; set; }
     
-    public CompositeAggregation(ElementTypeEnum elementType, string name, string description,
+    public CompositeAggregation(ElementDetails elementDetails,
         CompositeDefinition parent) : base(parent)
     {
-        ElementDetails = new ElementDetails(elementType, name, description);
-        Children = new Dictionary<SourceCodeDetails, List<CompositeDefinition>>();
+        ElementDetails = elementDetails;
+        Children = new Dictionary<CompositeElement, List<CompositeDefinition>>();
     }
 
     public override CompositeDefinition Search(CompositeElement searched)
