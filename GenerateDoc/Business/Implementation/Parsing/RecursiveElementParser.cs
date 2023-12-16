@@ -44,6 +44,7 @@ public class RecursiveElementParser : IElementParser
                     var rootCollection = new CompositeCollection(null);
                     rootCollection.Children.Add(currentElement);
                     currentElement.Parent = rootCollection;
+                    currentElement.HasChildren = true;
                     var nestedElementCollection = new CompositeCollection(rootCollection);
                     rootCollection.Children.Add(nestedElementCollection);
                     currentElement = nestedElementCollection;
@@ -57,6 +58,7 @@ public class RecursiveElementParser : IElementParser
                     var currentElementCollection = new CompositeCollection(currentElement.Parent);
                     currentElementCollection.Children.Add(currentElement);
                     currentElement.Parent = currentElementCollection;
+                    currentElement.HasChildren = true;
 
                     var childElementCollection = new CompositeCollection(currentElementCollection);
                     childElementCollection.Children.Add(childElement);

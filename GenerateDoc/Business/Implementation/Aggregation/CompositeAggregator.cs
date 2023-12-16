@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace GenerateDoc.Business.Implementation.Aggregation;
 
@@ -54,53 +55,77 @@ public class CompositeAggregator : ICompositeAggregator
 
     private void AggregateList(CompositeDefinition currentElement, CompositeCollection newList)
     {
-        if(currentElement is CompositeElement element)
+        if (currentElement is CompositeElement element)
         {
             var existingElement = newList.Root.Search(element);
-            if (existingElement != null)
+            if(existingElement is CompositeAggregation existingElementAsAggregation)
             {
-                var currentElementParentCollection = currentElement.Parent as CompositeCollection;
-                if (existingElement is CompositeAggregation aggregation)
-                {
-                    aggregation.Children.Add(element, 
-                        currentElementParentCollection.Children.Where(m=>m.Id != existingElement.Id).ToList());
-                }
-                else
-                {
-                    var newAggregation = new CompositeAggregation(element.ElementDetails, newList);
-                    foreach (var child in currentElementParentCollection.Children)
-                    {
-                        if(child is CompositeElement aggregatedChildElement 
-                            && aggregatedChildElement.ElementDetails.Equals(element.ElementDetails))
-                        {
-                            newAggregation.Children.Add(aggregatedChildElement,
-                                ((CompositeCollection)aggregatedChildElement.Parent).Children
-                                    .Where(m=> m.Id != aggregatedChildElement.Id
-                                                && !(m is CompositeElement identicalChild 
-                                                    && identicalChild.ElementDetails.Equals(aggregatedChildElement.ElementDetails)))
-                                    .ToList());
-                        }
-                    }
-                    newList.Children.Add(newAggregation);
-                    newList.Children = newList.Children
-                        .Where(m=> !(m is CompositeElement identicalChild
-                                     && identicalChild.ElementDetails.Equals(element.ElementDetails)))
-                        .ToList();
-                }
+                AddElementToExistingAggregation(element, existingElementAsAggregation);
+            }
+            else if (existingElement is CompositeElement existingElementAsElement)
+            {
+                var newAggregation = CreateAndAddGroupInNewAggregation(existingElementAsElement, newList);
+                AddElementToExistingAggregation(element, newAggregation);
             }
             else
             {
                 newList.Children.Add(element);
+                element.Parent = newList;
             }
         }
-        if(currentElement is CompositeCollection collection)
+        else if (currentElement is CompositeCollection collection)
         {
-            var childCollection = new CompositeCollection(newList);
-            newList.Children.Add(childCollection);
-            foreach (var elementTmp in collection.Children)
+            if(collection.Children.Count==1 && collection.Children[0] is CompositeCollection collectionChild)
             {
-                AggregateList(elementTmp, childCollection);
+                foreach (var elementTmp in collectionChild.Children.ToList())
+                {
+                    AggregateList(elementTmp, newList);
+                }
+            }
+            else
+            {
+                var childCollection = new CompositeCollection(newList);
+                newList.Children.Add(childCollection);
+                foreach (var elementTmp in collection.Children)
+                {
+                    AggregateList(elementTmp, childCollection);
+                }
             }
         }
+    }
+
+    private void AddElementToExistingAggregation(CompositeElement element, CompositeAggregation aggregation)
+    {
+        if (!element.HasChildren)
+        {
+            aggregation.Children.Add(element, new List<CompositeDefinition>());
+        }
+        else
+        {
+            var parentCollection = element.Parent as CompositeCollection;
+            var childs = parentCollection.Children.Where(m => m.Id != element.Id).ToList();
+            aggregation.Children.Add(element, childs);
+        }
+    }
+
+    private CompositeAggregation CreateAndAddGroupInNewAggregation(CompositeElement element, CompositeCollection newList)
+    {
+        var newAggregation = new CompositeAggregation(element.ElementDetails, newList);
+        var parentCollection = element.Parent as CompositeCollection;
+        if (!element.HasChildren)
+        {
+            newAggregation.Children.Add(element, new List<CompositeDefinition>());
+        }
+        else
+        {
+            var childs = parentCollection.Children.Where(m => m.Id != element.Id).ToList();
+            newAggregation.Children.Add(element, childs);
+        }
+        newList.Children.Add(newAggregation);
+        newList.Children = newList.Children
+            .Where(m=> !((m is CompositeCollection elementParent) 
+                && elementParent.Children.Any(e => e.Id == element.Id)))
+            .ToList();
+        return newAggregation;
     }
 }

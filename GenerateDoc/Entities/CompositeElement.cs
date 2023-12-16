@@ -31,7 +31,7 @@ public class CompositeElement : CompositeDefinition
 
     public override string ToString()
     {
-        return $"{ElementDetails}".PadLeft(Level * 3, ' ');
+        return $"{ElementDetails}{(HasChildren ? "(has childs)" : "")}".PadLeft(Level * 3, ' ');
     }
 
 }

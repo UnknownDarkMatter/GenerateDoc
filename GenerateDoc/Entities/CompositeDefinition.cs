@@ -33,6 +33,7 @@ public class CompositeDefinition
     public CompositeDefinition Parent { get; set; }
 
     public Guid Id { get; }
+    public bool HasChildren { get; set; }
 
     public CompositeDefinition(CompositeDefinition parent)
     {
