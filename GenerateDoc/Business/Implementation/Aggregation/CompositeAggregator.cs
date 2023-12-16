@@ -3,6 +3,7 @@ using GenerateDoc.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -146,6 +147,12 @@ public class CompositeAggregator : ICompositeAggregator
                 AggregateList(elementTmp, childCollection);
             }
         }
+    }
+
+    private bool IsCollectionOfElementWithChilds(List<CompositeDefinition> collection, out CompositeElement elementWithChilds)
+    {
+        elementWithChilds = collection.FirstOrDefault(m => (m is CompositeElement e) && e.HasChildren) as CompositeElement;
+        return elementWithChilds != null;
     }
 
 }
