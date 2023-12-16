@@ -30,7 +30,10 @@ public class CompositeAggregation : CompositeDefinition
             foreach (var child in list)
             {
                 var found = child.Search(searched);
-                if (found != null) return found;
+                if (found != null)
+                { 
+                    return found;
+                }
             }
         }
 
