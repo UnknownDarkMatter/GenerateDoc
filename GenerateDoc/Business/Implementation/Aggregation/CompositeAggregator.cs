@@ -65,7 +65,10 @@ public class CompositeAggregator : ICompositeAggregator
             else if (existingElement is CompositeElement existingElementAsElement)
             {
                 var newAggregation = CreateAndAddGroupInNewAggregation(existingElementAsElement, newList);
-                AddElementToExistingAggregation(element, newAggregation);
+                if(existingElementAsElement != element)
+                {
+                    AddElementToExistingAggregation(element, newAggregation);
+                }
             }
             else
             {
@@ -75,22 +78,7 @@ public class CompositeAggregator : ICompositeAggregator
         }
         else if (currentElement is CompositeCollection collection)
         {
-            if(collection.Children.Count==1 && collection.Children[0] is CompositeCollection collectionChild)
-            {
-                foreach (var elementTmp in collectionChild.Children.ToList())
-                {
-                    AggregateList(elementTmp, newList);
-                }
-            }
-            else
-            {
-                var childCollection = new CompositeCollection(newList);
-                newList.Children.Add(childCollection);
-                foreach (var elementTmp in collection.Children)
-                {
-                    AggregateList(elementTmp, childCollection);
-                }
-            }
+            AddCollectionChildsRecursively(collection, newList);
         }
     }
 
@@ -110,8 +98,8 @@ public class CompositeAggregator : ICompositeAggregator
 
     private CompositeAggregation CreateAndAddGroupInNewAggregation(CompositeElement element, CompositeCollection newList)
     {
-        var newAggregation = new CompositeAggregation(element.ElementDetails, newList);
         var parentCollection = element.Parent as CompositeCollection;
+        var newAggregation = new CompositeAggregation(element.ElementDetails, parentCollection);
         if (!element.HasChildren)
         {
             newAggregation.Children.Add(element, new List<CompositeDefinition>());
@@ -121,11 +109,43 @@ public class CompositeAggregator : ICompositeAggregator
             var childs = parentCollection.Children.Where(m => m.Id != element.Id).ToList();
             newAggregation.Children.Add(element, childs);
         }
-        newList.Children.Add(newAggregation);
-        newList.Children = newList.Children
-            .Where(m=> !((m is CompositeCollection elementParent) 
-                && elementParent.Children.Any(e => e.Id == element.Id)))
-            .ToList();
+
+        var parentChildren = (parentCollection.Parent as CompositeCollection).Children;
+        parentChildren.Remove(parentCollection);
+        parentChildren.Add(newAggregation);
+        parentChildren = parentChildren.Where(m => (!(m is CompositeCollection)) 
+            || (m is CompositeCollection c && c.Children.Any())).ToList();
+        (newList.Parent as CompositeCollection).Children = parentChildren;
+
         return newAggregation;
     }
+
+    private void AddCollectionChildsRecursively(CompositeCollection collection, CompositeCollection newList)
+    {
+        if (collection.Children.Count == 1
+            && collection.Children[0] is CompositeCollection collectionChild
+            && collectionChild.Children.Count == 1)
+        {
+            foreach (var elementTmp in collectionChild.Children.ToList())
+            {
+                AggregateList(elementTmp, newList);
+            }
+        }
+        else
+        {
+            var childCollection = new CompositeCollection(newList);
+            newList.Children.Add(childCollection);
+            var childrenToAdd = collection.Children;
+            if (childrenToAdd.Count == 1
+                && childrenToAdd[0] is CompositeCollection collectionToAddChild)
+            {
+                childrenToAdd = collectionToAddChild.Children;
+            }
+            foreach (var elementTmp in childrenToAdd.ToList())
+            {
+                AggregateList(elementTmp, childCollection);
+            }
+        }
+    }
+
 }

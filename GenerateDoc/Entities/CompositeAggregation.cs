@@ -25,6 +25,15 @@ public class CompositeAggregation : CompositeDefinition
         {
             return this;
         }
+        foreach (var list in Children.Values)
+        {
+            foreach (var child in list)
+            {
+                var found = child.Search(searched);
+                if (found != null) return found;
+            }
+        }
+
         return null;
     }
 
