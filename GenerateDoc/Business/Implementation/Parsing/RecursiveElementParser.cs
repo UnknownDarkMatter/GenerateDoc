@@ -25,6 +25,12 @@ public class RecursiveElementParser : IElementParser
         //for each sibblings occurencies
         while (_elementParser.TryParseElement(fileContent, fi, start, end, parent, out CompositeDefinition currentElement, out ElementDeclaration currentDeclaration))
         {
+            if (currentElement.Parent is null)
+            {
+                foundElements.Add(currentElement);
+                foundDeclarations.Add(currentDeclaration);
+            }
+
             if (currentDeclaration.IsBeginAndEnd)
             {
                 foundElements.Add(currentElement);
