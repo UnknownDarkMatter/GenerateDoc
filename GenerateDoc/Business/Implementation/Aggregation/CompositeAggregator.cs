@@ -157,10 +157,13 @@ public class CompositeAggregator : ICompositeAggregator
     {
         var newAggregation = new CompositeAggregation(element.ElementDetails, element.Parent);
         element.IsInsideAggregationGroup = true;
-        if (!element.HasChildren)
+        if(!newAggregation.Children.ContainsKey(element) )
         {
             newAggregation.Children.Add(element, new List<CompositeDefinition>());
+        }
 
+        if (!element.HasChildren)
+        {
             if (element.Parent is CompositeCollection parentCollection)
             {
                 if(parentCollection.Parent is CompositeCollection parentParentCollection)
@@ -213,10 +216,6 @@ public class CompositeAggregator : ICompositeAggregator
                 parentChildren = parentChildren.Where(m => (!(m is CompositeCollection))
                     || (m is CompositeCollection c && c.Children.Any())).ToList();
 
-                if (newList.Parent is CompositeCollection c2)
-                {
-                    c2.Children.Remove(newList);
-                }
             }
             else if (element.Parent is CompositeAggregation parentAggregation)
             {
