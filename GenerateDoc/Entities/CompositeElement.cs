@@ -34,6 +34,7 @@ public class CompositeElement : CompositeDefinition
     {
         visitor.VisitCompositeElement(this);
     }
+
     public override string ToString()
     {
         return $"{ElementDetails}{(HasChildren ? "(has childs)" : "")}".PadLeft(Level * 3, ' ');

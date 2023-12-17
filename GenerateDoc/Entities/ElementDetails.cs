@@ -28,6 +28,6 @@ public class ElementDetails : IEquatable<ElementDetails>
 
     public override string ToString()
     {
-        return $"{ElementType}-{Name}";
+        return $"{ElementType}-{Name}{Description ?? ""}";
     }
 }

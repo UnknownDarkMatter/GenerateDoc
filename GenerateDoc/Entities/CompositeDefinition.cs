@@ -72,7 +72,6 @@ public class CompositeDefinition
     {
         visitor.VisitCompositeDefinition(this);
     }
-
     public override string ToString()
     {
         return base.ToString();

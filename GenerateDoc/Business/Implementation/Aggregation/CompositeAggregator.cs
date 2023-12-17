@@ -79,14 +79,17 @@ public class CompositeAggregator : ICompositeAggregator
             }
             else if (existingElement is CompositeElement existingElementAsElement)
             {
-                CompositeAggregation newAggregation = newList.Root.Search(existingElementAsElement)?.Parent as CompositeAggregation;
-                if(newAggregation is null)
+                if(existingElementAsElement != element)
                 {
-                    newAggregation = CreateAndAddGroupInNewAggregation(existingElementAsElement, newList);
-                }
-                if (existingElementAsElement != element)
-                {
-                    AddElementToExistingAggregation(element, newAggregation);
+                    CompositeAggregation newAggregation = newList.Root.Search(existingElementAsElement)?.Parent as CompositeAggregation;
+                    if (newAggregation is null)
+                    {
+                        newAggregation = CreateAndAddGroupInNewAggregation(existingElementAsElement, newList);
+                    }
+                    if (existingElementAsElement != element)
+                    {
+                        AddElementToExistingAggregation(element, newAggregation);
+                    }
                 }
             }
             else
@@ -97,6 +100,10 @@ public class CompositeAggregator : ICompositeAggregator
                 }
                 else if(newList is CompositeAggregation a)
                 {
+                    if (!a.Children.ContainsKey(aggregatedElementKey))
+                    {
+                        a.Children.Add(aggregatedElementKey, new List<CompositeDefinition>());
+                    }
                     a.Children[aggregatedElementKey].Add(element);
                 }
                 element.Parent = newList;
@@ -267,6 +274,7 @@ public class CompositeAggregator : ICompositeAggregator
             {
                 childrenToAdd = collectionToAddChild.Children;
             }
+
             foreach (var elementTmp in childrenToAdd.ToList())
             {
                 Aggregate(elementTmp, childCollection, aggregatedElementKey);
