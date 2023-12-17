@@ -40,11 +40,11 @@ public class TextVisitor : ICompositeVisitor
     public void VisitCompositeAggregation(CompositeAggregation aggregation)
     {
         var txt = $"Group:{aggregation.ElementDetails.Name}".ToString();
-        _sb.Append(txt.DoPadLeft((aggregation.PaddingLevel() - 1) * _identation, ' ') + "\r\n");
+        _sb.Append(txt.DoPadLeft((aggregation.PaddingLevel()) * _identation, ' ') + "\r\n");
         foreach (var aggregated in aggregation.Children)
         {
             txt = $"-Group child : {aggregated.Key.ElementDetails.ElementType}:{aggregated.Key.ElementDetails.Name}".ToString();
-            _sb.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel() - 1) * _identation, ' ') + "\r\n");
+            _sb.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel()) * _identation, ' ') + "\r\n");
             foreach(var child in aggregated.Value)
             {
                 child.AcceptVisitor(this);
@@ -62,11 +62,11 @@ public class TextVisitor : ICompositeVisitor
     public void VisitCompositeElement(CompositeElement element)
     {
         var txt = $"{element.ElementDetails.ElementType}:{element.ElementDetails.Name}".ToString();
-        _sb.Append(txt.DoPadLeft(element.PaddingLevel() * _identation, ' ') + "\r\n");
+        _sb.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
         if (!string.IsNullOrWhiteSpace(element.ElementDetails.Description))
         {
-            txt = $"   (Description : {element.ElementDetails.Description})".ToString();
-            _sb.Append(txt.DoPadLeft(element.PaddingLevel() * _identation, ' ') + "\r\n");
+            txt = $"  (Description : {element.ElementDetails.Description})".ToString();
+            _sb.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
         }
     }
 }

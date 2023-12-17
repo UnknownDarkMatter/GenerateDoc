@@ -75,14 +75,17 @@ public class CompositeAggregator : ICompositeAggregator
             var existingElement = newList.Root.Search(element);
             if(existingElement is CompositeAggregation existingElementAsAggregation)
             {
-                AddElementToExistingAggregation(element, existingElementAsAggregation);
+                var elementChildren = GetChildren(element);
+                AddElementToExistingAggregation(element, elementChildren, existingElementAsAggregation);
             }
             else if (existingElement is CompositeElement existingElementAsElement)
             {
-                var newAggregation = CreateAndAddGroupInNewAggregation(existingElementAsElement, newList);
+                var existingElementChildren = GetChildren(existingElementAsElement);
+                var newAggregation = CreateAndAddGroupInNewAggregation(existingElementAsElement, existingElementChildren, newList);
                 if(existingElementAsElement != element)
                 {
-                    AddElementToExistingAggregation(element, newAggregation);
+                    var elementChildren = GetChildren(element);
+                    AddElementToExistingAggregation(element, elementChildren, newAggregation);
                 }
             }
             else
@@ -97,32 +100,35 @@ public class CompositeAggregator : ICompositeAggregator
         }
     }
 
-    private void AddElementToExistingAggregation(CompositeElement element, CompositeAggregation aggregation)
+    private void AddElementToExistingAggregation(CompositeElement element, List<CompositeDefinition> elementChildren,
+        CompositeAggregation aggregation)
     {
+        element.IsInsideAggregationGroup = true;
+        element.Parent = aggregation;
         if (!element.HasChildren)
         {
             aggregation.Children.Add(element, new List<CompositeDefinition>());
         }
         else
         {
-            var parentCollection = element.Parent as CompositeCollection;
-            var childs = parentCollection.Children.Where(m => m.Id != element.Id).ToList();
-            aggregation.Children.Add(element, childs);
+            aggregation.Children.Add(element, elementChildren);
         }
     }
 
-    private CompositeAggregation CreateAndAddGroupInNewAggregation(CompositeElement element, CompositeCollection newList)
+    private CompositeAggregation CreateAndAddGroupInNewAggregation(CompositeElement element, 
+        List<CompositeDefinition> elementChildren, CompositeCollection newList)
     {
         var parentCollection = element.Parent as CompositeCollection;
         var newAggregation = new CompositeAggregation(element.ElementDetails, parentCollection);
+        element.IsInsideAggregationGroup = true;
+        element.Parent = newAggregation;
         if (!element.HasChildren)
         {
             newAggregation.Children.Add(element, new List<CompositeDefinition>());
         }
         else
         {
-            var childs = parentCollection.Children.Where(m => m.Id != element.Id).ToList();
-            newAggregation.Children.Add(element, childs);
+            newAggregation.Children.Add(element, elementChildren);
         }
 
         var parentChildren = (parentCollection.Parent as CompositeCollection).Children;
@@ -130,9 +136,19 @@ public class CompositeAggregator : ICompositeAggregator
         parentChildren.Add(newAggregation);
         parentChildren = parentChildren.Where(m => (!(m is CompositeCollection)) 
             || (m is CompositeCollection c && c.Children.Any())).ToList();
-        (newList.Parent as CompositeCollection).Children = parentChildren;
+        (newList.Parent as CompositeCollection).Children.Remove(newList);
+        (newList.Parent as CompositeCollection).Children.AddRange(parentChildren);
 
         return newAggregation;
+    }
+
+    private List<CompositeDefinition> GetChildren(CompositeElement element)
+    {
+        if (!element.HasChildren) { return new List<CompositeDefinition>();  }
+
+        var children = (element.Parent as CompositeCollection).Children;
+        children = children.Where(m => m.Id != element.Id).ToList();
+        return children;
     }
 
     private void AddCollectionChildsRecursively(CompositeCollection collection, CompositeCollection newList)

@@ -35,6 +35,7 @@ public class CompositeDefinition
 
     public Guid Id { get; }
     public bool HasChildren { get; set; }
+    public bool IsInsideAggregationGroup { get; set; }
 
     public CompositeDefinition(CompositeDefinition parent)
     {
@@ -49,13 +50,13 @@ public class CompositeDefinition
 
     public int PaddingLevel()
     {
-        if (Parent == null)
+        if (Parent == null ||Level <= 2)
         {
             return 0;
         }
         else
         {
-            if ((Parent is CompositeCollection c) && IsCollectionOfElementWithChilds(c.Children))
+            if (Parent is CompositeCollection || Parent is CompositeAggregation)
             {
                 return Parent.PaddingLevel() + 1;
             }
