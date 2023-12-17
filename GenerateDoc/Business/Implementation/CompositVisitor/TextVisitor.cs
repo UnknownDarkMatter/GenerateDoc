@@ -43,8 +43,8 @@ public class TextVisitor : ICompositeVisitor
         _sb.Append(txt.DoPadLeft((aggregation.PaddingLevel() - 1) * _identation, ' ') + "\r\n");
         foreach (var aggregated in aggregation.Children)
         {
-            //txt = $"-{aggregated.Key.ElementDetails.ElementType}".ToString();
-            //_sb.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel() - 1) * _identation, ' ') + "\r\n");
+            txt = $"-Group child : {aggregated.Key.ElementDetails.ElementType}:{aggregated.Key.ElementDetails.Name}".ToString();
+            _sb.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel() - 1) * _identation, ' ') + "\r\n");
             foreach(var child in aggregated.Value)
             {
                 child.AcceptVisitor(this);
