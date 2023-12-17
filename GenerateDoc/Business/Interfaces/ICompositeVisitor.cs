@@ -9,6 +9,8 @@ namespace GenerateDoc.Business.Interfaces;
 
 public interface ICompositeVisitor
 {
+    public void Initialize();
+    public void Terminate();
     public void VisitCompositeDefinition(CompositeDefinition definition);
     public void VisitCompositeElement(CompositeElement element);
     public void VisitCompositeCollection(CompositeCollection collection);

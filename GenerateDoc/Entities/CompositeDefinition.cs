@@ -47,6 +47,26 @@ public class CompositeDefinition
         return null;
     }
 
+    public int PaddingLevel()
+    {
+        if (Parent == null)
+        {
+            return 0;
+        }
+        else
+        {
+            if ((Parent is CompositeCollection c) && IsCollectionOfElementWithChilds(c.Children))
+            {
+                return Parent.PaddingLevel() + 1;
+            }
+            else
+            {
+                return Parent.PaddingLevel();
+            }
+        }
+
+    }
+
     public virtual void AcceptVisitor(ICompositeVisitor visitor)
     {
         visitor.VisitCompositeDefinition(this);
@@ -56,4 +76,11 @@ public class CompositeDefinition
     {
         return base.ToString();
     }
+
+    private bool IsCollectionOfElementWithChilds(List<CompositeDefinition> collection)
+    {
+        var elementWithChilds = collection.FirstOrDefault(m => (m is CompositeElement e) && e.HasChildren) as CompositeElement;
+        return elementWithChilds != null;
+    }
+
 }

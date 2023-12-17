@@ -6,10 +6,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GenerateDoc.Business.Implementation.CompositVisitor;
+namespace GenerateDoc.Business.Implementation.CompositVisitor.MarkDown;
 
-public class MarkDownVisitor : ICompositeVisitor
+public class TagMarkDownVisitor : ICompositeVisitor
 {
+    public void Initialize()
+    {
+
+    }
+    public void Terminate()
+    {
+
+    }
+
+
     public void VisitCompositeDefinition(CompositeDefinition definition)
     {
         throw new NotImplementedException();

@@ -26,9 +26,14 @@ public class DocumentationGenerator : IDocumentationGenerator
 
     public void GenerateDocumentation(DocumentationFormatEnum documentationFormatEnum)
     {
+        Console.WriteLine($"########### DEBUT #########");
         var elements = _fileSearcher.FindAll();
         var elementsAggregated = _compositeAggregator.Aggregate(elements);
         var visitor = _visitorFactory.Create(documentationFormatEnum);
+
+        visitor.Initialize();
         elementsAggregated.AcceptVisitor(visitor);
+        visitor.Terminate();
+        Console.WriteLine($"########### FIN #########");
     }
 }

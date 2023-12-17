@@ -2,6 +2,7 @@
 using GenerateDoc.Business.Implementation;
 using GenerateDoc.Business.Implementation.Aggregation;
 using GenerateDoc.Business.Implementation.CompositVisitor;
+using GenerateDoc.Business.Implementation.CompositVisitor.MarkDown;
 using GenerateDoc.Business.Implementation.Parsing;
 using GenerateDoc.Business.Interfaces;
 using GenerateDoc.Infrastructure;
@@ -32,6 +33,12 @@ Parser.Default.ParseArguments<CommandLineOptions>(args)
         builder.Services.AddSingleton<IDocumentationGenerator, DocumentationGenerator>();
         builder.Services.AddSingleton<ICompositeAggregator, CompositeAggregator>();
         builder.Services.AddSingleton<VisitorFactory>();
+        builder.Services.AddSingleton<TextVisitor>();
+        builder.Services.AddSingleton<MarkDownVisitor>();
+        builder.Services.AddSingleton<TagMarkDownVisitor>();
+        builder.Services.AddSingleton<FunctionMarkDownVisitor> ();
+        builder.Services.AddSingleton<RuleMarkDownVisitor> ();
+        builder.Services.AddSingleton<ScreenMarkDownVisitor> ();
         builder.Services.AddSingleton((serviceProvider) => { return o; });
 
         using IHost host = builder.Build();
