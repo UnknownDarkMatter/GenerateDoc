@@ -164,37 +164,12 @@ public class CompositeAggregator : ICompositeAggregator
 
         if (!element.HasChildren)
         {
-            if (element.Parent is CompositeCollection parentCollection)
+            CreateAndAddGroupInNewAggregation(element, newList, newAggregation);
+
+            if (newList.Parent is CompositeCollection c)
             {
-                if(parentCollection.Parent is CompositeCollection parentParentCollection)
-                {
-                    var parentChildren = parentParentCollection.Children;
-                    parentChildren.Remove(parentCollection);
-                    parentChildren.Add(newAggregation);
-                    parentChildren = parentChildren.Where(m => (!(m is CompositeCollection))
-                        || (m is CompositeCollection c && c.Children.Any())).ToList();
-
-                }
-                else if (parentCollection.Parent is CompositeAggregation parentParentAggregation)
-                {
-                    var parentOfElement = newList.Root.Search(element).Parent;
-                    if(parentOfElement is CompositeCollection parentCollectionForAggregation)
-                    {
-                        parentCollectionForAggregation.Children.Remove(element);
-                        parentCollectionForAggregation.Children.Add(newAggregation);
-                    }
-                }
-
-                if (newList.Parent is CompositeCollection c)
-                {
-                    c.Children.Remove(newList);
-                }
+                c.Children.Remove(newList);
             }
-            else if (element.Parent is CompositeAggregation parentAggregation)
-            {
-                throw new NotImplementedException();
-            }
-
         }
         else
         {
@@ -208,19 +183,7 @@ public class CompositeAggregator : ICompositeAggregator
                 children = a.Children[element];
             }
 
-            if (element.Parent is CompositeCollection parentCollection)
-            {
-                var parentChildren = (parentCollection.Parent as CompositeCollection).Children;
-                parentChildren.Remove(parentCollection);
-                parentChildren.Add(newAggregation);
-                parentChildren = parentChildren.Where(m => (!(m is CompositeCollection))
-                    || (m is CompositeCollection c && c.Children.Any())).ToList();
-
-            }
-            else if (element.Parent is CompositeAggregation parentAggregation)
-            {
-                throw new NotImplementedException();
-            }
+            CreateAndAddGroupInNewAggregation(element, newList, newAggregation);
 
             foreach (var child in children.ToList())
             {
@@ -236,6 +199,39 @@ public class CompositeAggregator : ICompositeAggregator
             }
         }
         element.Parent = newAggregation;
+
+        return newAggregation;
+    }
+
+    private CompositeAggregation CreateAndAddGroupInNewAggregation(CompositeElement element, CompositeDefinition newList,
+        CompositeAggregation newAggregation)
+    {
+        if (element.Parent is CompositeCollection parentCollection)
+        {
+            if (parentCollection.Parent is CompositeCollection parentParentCollection)
+            {
+                var parentChildren = parentParentCollection.Children;
+                parentChildren.Remove(parentCollection);
+                parentChildren.Add(newAggregation);
+                parentChildren = parentChildren.Where(m => (!(m is CompositeCollection))
+                    || (m is CompositeCollection c && c.Children.Any())).ToList();
+
+            }
+            else if (parentCollection.Parent is CompositeAggregation parentParentAggregation)
+            {
+                var parentOfElement = newList.Root.Search(element).Parent;
+                if (parentOfElement is CompositeCollection parentCollectionForAggregation)
+                {
+                    parentCollectionForAggregation.Children.Remove(element);
+                    parentCollectionForAggregation.Children.Add(newAggregation);
+                }
+            }
+
+        }
+        else if (element.Parent is CompositeAggregation parentAggregation)
+        {
+            throw new NotImplementedException();
+        }
 
         return newAggregation;
     }
