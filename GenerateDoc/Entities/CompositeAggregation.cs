@@ -46,6 +46,7 @@ public class CompositeAggregation : CompositeDefinition
         visitor.VisitCompositeAggregation(this);
     }
 
+
     public override string ToString()
     {
         return $"Group : {ElementDetails}";

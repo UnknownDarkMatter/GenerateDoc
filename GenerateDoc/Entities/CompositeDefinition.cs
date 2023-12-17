@@ -78,10 +78,4 @@ public class CompositeDefinition
         return base.ToString();
     }
 
-    private bool IsCollectionOfElementWithChilds(List<CompositeDefinition> collection)
-    {
-        var elementWithChilds = collection.FirstOrDefault(m => (m is CompositeElement e) && e.HasChildren) as CompositeElement;
-        return elementWithChilds != null;
-    }
-
 }
