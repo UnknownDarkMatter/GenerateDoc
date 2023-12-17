@@ -1,4 +1,6 @@
-﻿using GenerateDoc.Business.Interfaces;
+﻿using GenerateDoc.Business.Implementation.CompositVisitor;
+using GenerateDoc.Business.Interfaces;
+using GenerateDoc.Entities;
 using GenerateDoc.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -12,16 +14,21 @@ public class DocumentationGenerator : IDocumentationGenerator
 {
     private readonly IFileSearcher _fileSearcher;
     private readonly ICompositeAggregator _compositeAggregator;
+    private readonly VisitorFactory _visitorFactory;
 
-    public DocumentationGenerator(IFileSearcher fileSearcher, ICompositeAggregator compositeAggregator)
+    public DocumentationGenerator(IFileSearcher fileSearcher, ICompositeAggregator compositeAggregator,
+        VisitorFactory visitorFactory)
     {
         _fileSearcher = fileSearcher ?? throw new ArgumentNullException(nameof(fileSearcher));
-        _compositeAggregator = compositeAggregator;
+        _compositeAggregator = compositeAggregator ?? throw new ArgumentNullException(nameof(compositeAggregator));
+        _visitorFactory = visitorFactory ?? throw new ArgumentNullException(nameof(visitorFactory));
     }
 
-    public void GenerateDocumentation()
+    public void GenerateDocumentation(DocumentationFormatEnum documentationFormatEnum)
     {
         var elements = _fileSearcher.FindAll();
         var elementsAggregated = _compositeAggregator.Aggregate(elements);
+        var visitor = _visitorFactory.Create(documentationFormatEnum);
+        elementsAggregated.AcceptVisitor(visitor);
     }
 }

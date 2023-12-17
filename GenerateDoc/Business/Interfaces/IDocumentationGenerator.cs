@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GenerateDoc.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,5 @@ namespace GenerateDoc.Business.Interfaces;
 
 public interface IDocumentationGenerator
 {
-    public void GenerateDocumentation();
+    public void GenerateDocumentation(DocumentationFormatEnum documentationFormatEnum);
 }

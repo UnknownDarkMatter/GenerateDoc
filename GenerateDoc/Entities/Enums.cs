@@ -14,4 +14,10 @@ namespace GenerateDoc.Entities
         Rule = 3,
         Tag = 4
     }
+
+    public enum DocumentationFormatEnum
+    {
+        Text = 1,
+        MarkDown = 2
+    }
 }

@@ -44,17 +44,31 @@ public class CompositeAggregator : ICompositeAggregator
 {
     public CompositeDefinition Aggregate(IEnumerable<CompositeDefinition> compositeDefinitions)
     {
-        var newList = new CompositeCollection(null);
-        var root = compositeDefinitions.FirstOrDefault();
-        if(root is null)
+        CompositeDefinition root;
+        if(compositeDefinitions.Count() == 0)
         {
-            return newList;
+            root = new CompositeCollection(null);
         }
-        AggregateList(root, newList);
-        return newList;
+        else if(compositeDefinitions.Count() == 1)
+        {
+            root = compositeDefinitions.First();
+        }
+        else
+        {
+            var rootAsCollection = new CompositeCollection(null);
+            root = rootAsCollection;
+            rootAsCollection.Children.AddRange(compositeDefinitions);
+            foreach (var element in compositeDefinitions)
+            {
+                element.Parent = rootAsCollection;
+            }
+        }
+        var aggregatedComposite = new CompositeCollection(null);
+        Aggregate(root, aggregatedComposite);
+        return aggregatedComposite;
     }
 
-    private void AggregateList(CompositeDefinition currentElement, CompositeCollection newList)
+    private void Aggregate(CompositeDefinition currentElement, CompositeCollection newList)
     {
         if (currentElement is CompositeElement element)
         {
@@ -129,7 +143,7 @@ public class CompositeAggregator : ICompositeAggregator
         {
             foreach (var elementTmp in collectionChild.Children.ToList())
             {
-                AggregateList(elementTmp, newList);
+                Aggregate(elementTmp, newList);
             }
         }
         else
@@ -144,7 +158,7 @@ public class CompositeAggregator : ICompositeAggregator
             }
             foreach (var elementTmp in childrenToAdd.ToList())
             {
-                AggregateList(elementTmp, childCollection);
+                Aggregate(elementTmp, childCollection);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GenerateDoc.Business.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,11 @@ public class CompositeDefinition
     public virtual CompositeDefinition Search(CompositeElement searched)
     {
         return null;
+    }
+
+    public virtual void AcceptVisitor(ICompositeVisitor visitor)
+    {
+        visitor.VisitCompositeDefinition(this);
     }
 
     public override string ToString()

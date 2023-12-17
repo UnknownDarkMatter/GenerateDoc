@@ -18,4 +18,7 @@ public class CommandLineOptions
     [Option('d', "devops", Required = true, HelpText = "Set base url with ending url encoded slash of devops url.")]
     public string DevOpsUrl { get; set; }
 
+    [Option('f', "format", Required = true, HelpText = "Set format of the documentation : txt or md (markdown).")]
+    public string Format { get; set; }
+
 }

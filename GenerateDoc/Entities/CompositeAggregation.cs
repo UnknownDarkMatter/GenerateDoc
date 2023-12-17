@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GenerateDoc.Business.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,6 +39,11 @@ public class CompositeAggregation : CompositeDefinition
         }
 
         return null;
+    }
+
+    public override void AcceptVisitor(ICompositeVisitor visitor)
+    {
+        visitor.VisitCompositeAggregation(this);
     }
 
     public override string ToString()
