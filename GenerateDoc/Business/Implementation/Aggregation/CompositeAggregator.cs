@@ -141,8 +141,6 @@ public class CompositeAggregator : ICompositeAggregator
                 }
                 Aggregate(child, aggregation, element);
             }
-
-            //aggregation.Children.Add(element, children);
         }
         element.Parent = aggregation;
     }
@@ -184,7 +182,7 @@ public class CompositeAggregator : ICompositeAggregator
             }
             else if (element.Parent is CompositeAggregation parentAggregation)
             {
-
+                throw new NotImplementedException();
             }
 
         }
@@ -199,7 +197,6 @@ public class CompositeAggregator : ICompositeAggregator
             {
                 children = a.Children[element];
             }
-            //newAggregation.Children.Add(element, children);
 
             if (element.Parent is CompositeCollection parentCollection)
             {
@@ -216,9 +213,8 @@ public class CompositeAggregator : ICompositeAggregator
             }
             else if (element.Parent is CompositeAggregation parentAggregation)
             {
-
+                throw new NotImplementedException();
             }
-
 
             foreach (var child in children.ToList())
             {
