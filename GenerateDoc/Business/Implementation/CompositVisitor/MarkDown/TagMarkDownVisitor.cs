@@ -32,7 +32,7 @@ public class TagMarkDownVisitor : ICompositeVisitor
 
     public void VisitCompositeElement(CompositeElement element)
     {
-        var txt = $"{element.ElementDetails.ElementType}:{element.ElementDetails.Name})".ToString();
+        var txt = $"{element.ElementDetails.ElementType}:{element.ElementDetails.Name}".ToString();
 
         txt += $" [src]({MarkdownHelper.GenerateSourceCodeHyperLink(element.SourceCodeDetails, _commandLineOptions)})";
 
