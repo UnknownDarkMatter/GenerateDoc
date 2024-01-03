@@ -21,6 +21,6 @@ public static class StringUtils
 
     public static string LineBreak()
     {
-        return "<br/>\r\n";
+        return "\r\n\r\n";
     }
 }
