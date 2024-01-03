@@ -34,7 +34,7 @@ public class TagMarkDownVisitor : ICompositeVisitor
     {
         var txt = $"{element.ElementDetails.ElementType}:{element.ElementDetails.Name})".ToString();
 
-        txt += $" [src]({MarkdownHelper.GenerateSourceCodeHyperLink(element.SourceCodeDetails, _commandLineOptions)}";
+        txt += $" [src]({MarkdownHelper.GenerateSourceCodeHyperLink(element.SourceCodeDetails, _commandLineOptions)})";
 
         _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
 

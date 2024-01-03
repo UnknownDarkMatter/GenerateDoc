@@ -61,14 +61,15 @@ public class MarkDownVisitor : ICompositeVisitor
         _fileContent.Append(txt.DoPadLeft((aggregation.PaddingLevel()) * _identation, ' ') + "\r\n");
         foreach (var aggregated in aggregation.Children)
         {
-            txt = $"{aggregated.Key.ElementDetails.ElementType}:{aggregated.Key.ElementDetails.Name}".ToString();
-            _fileContent.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel()) * _identation, ' ') + "\r\n");
+            //txt = $"{aggregated.Key.ElementDetails.ElementType}:{aggregated.Key.ElementDetails.Name}".ToString();
+            //_fileContent.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel()) * _identation, ' ') + "\r\n");
 
-            if (!string.IsNullOrWhiteSpace(aggregated.Key.ElementDetails.Description))
-            {
-                txt = $"  (Description : {aggregated.Key.ElementDetails.Description})".ToString();
-                _fileContent.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
-            }
+            //if (!string.IsNullOrWhiteSpace(aggregated.Key.ElementDetails.Description))
+            //{
+            //    txt = $"  (Description : {aggregated.Key.ElementDetails.Description})".ToString();
+            //    _fileContent.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+            //}
+            VisitCompositeElement(aggregated.Key);
 
             foreach (var child in aggregated.Value)
             {

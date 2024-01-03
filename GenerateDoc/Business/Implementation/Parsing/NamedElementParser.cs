@@ -99,7 +99,8 @@ public abstract class NamedElementParser : IElementParser
             var name = match.Groups["Name"].Value;
             var description = match.Groups["Description"]?.Value;
             var elementType = ElementTypeMapper.Map(match.Groups["Type"].Value);
-            element = new CompositeElement(elementType, name, description, fi, match.Index, parent);
+            var line = LineFromPos(fileContent.Substring(0, match.Index), match.Index);
+            element = new CompositeElement(elementType, name, description, fi, line, parent);
 
             int elementStart = match.Index;
             int? elementEnd = match.Index + match.Value.Length;
@@ -146,7 +147,8 @@ public abstract class NamedElementParser : IElementParser
             if (matchEnd.Success)
             {
                 var elementType = ElementTypeMapper.Map(matchBegin.Groups["Type"].Value);
-                element = new CompositeElement(elementType, name, description, fi, matchBegin.Index, parent);
+                var line = LineFromPos(fileContent.Substring(0, matchBegin.Index), matchBegin.Index);
+                element = new CompositeElement(elementType, name, description, fi, line, parent);
 
                 string declarationContent = matchBegin.Value;
                 int elementStart = matchBegin.Index;
@@ -161,6 +163,16 @@ public abstract class NamedElementParser : IElementParser
         element = null;
         elementDeclaration = null;
         return false;
+    }
+
+    public int LineFromPos(string input, int indexPosition)
+    {
+        int lineNumber = 1;
+        for (int i = 0; i < indexPosition; i++)
+        {
+            if (input[i] == '\n') lineNumber++;
+        }
+        return lineNumber;
     }
 
 }
