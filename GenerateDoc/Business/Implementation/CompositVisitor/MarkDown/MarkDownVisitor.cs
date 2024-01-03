@@ -57,11 +57,11 @@ public class MarkDownVisitor : ICompositeVisitor
 
     public void VisitCompositeAggregation(CompositeAggregation aggregation)
     {
-        var txt = $"Group:{aggregation.ElementDetails.Name}".ToString();
+        var txt = $"{aggregation.ElementDetails.Name}".ToString();
         _fileContent.Append(txt.DoPadLeft((aggregation.PaddingLevel()) * _identation, ' ') + "\r\n");
         foreach (var aggregated in aggregation.Children)
         {
-            txt = $"-Group child : {aggregated.Key.ElementDetails.ElementType}:{aggregated.Key.ElementDetails.Name}".ToString();
+            txt = $"{aggregated.Key.ElementDetails.ElementType}:{aggregated.Key.ElementDetails.Name}".ToString();
             _fileContent.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel()) * _identation, ' ') + "\r\n");
 
             if (!string.IsNullOrWhiteSpace(aggregated.Key.ElementDetails.Description))

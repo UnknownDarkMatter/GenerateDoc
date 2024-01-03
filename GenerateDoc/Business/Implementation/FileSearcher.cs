@@ -31,7 +31,7 @@ public class FileSearcher : IFileSearcher
 
     private void AddOccurencies(DirectoryInfo di, List<CompositeDefinition> occurencies)
     {
-        foreach(var fi in di.GetFiles())
+        foreach(var fi in di.GetFiles(_commandLineOptions.Pattern))
         {
             string fileContent = File.ReadAllText(fi.FullName);
             if (_elementParser.TryParseElement(fileContent, fi, 0, null, null, out CompositeDefinition element, out ElementDeclaration declaration))
