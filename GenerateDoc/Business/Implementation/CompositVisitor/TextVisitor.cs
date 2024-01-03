@@ -16,7 +16,7 @@ public class TextVisitor : ICompositeVisitor
 {
     private CommandLineOptions _commandLineOptions;
     private StringBuilder _sb;
-    private int _identation = 2;
+    private int _identation = Constants.Identation;
     public TextVisitor(CommandLineOptions commandLineOptions)
     {
         _commandLineOptions = commandLineOptions ?? throw new ArgumentNullException(nameof(commandLineOptions));
@@ -32,7 +32,7 @@ public class TextVisitor : ICompositeVisitor
         File.WriteAllText(path, fileContent);
     }
 
-    public void VisitCompositeDefinition(CompositeDefinition definition)
+    public void VisitCompositeDefinition(dynamic definition)
     {
         throw new NotImplementedException();
     }

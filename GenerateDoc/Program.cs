@@ -5,6 +5,7 @@ using GenerateDoc.Business.Implementation.CompositVisitor;
 using GenerateDoc.Business.Implementation.CompositVisitor.MarkDown;
 using GenerateDoc.Business.Implementation.Parsing;
 using GenerateDoc.Business.Interfaces;
+using GenerateDoc.Entities;
 using GenerateDoc.Infrastructure;
 using GenerateDoc.Utils;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +40,7 @@ Parser.Default.ParseArguments<CommandLineOptions>(args)
         builder.Services.AddSingleton<FunctionMarkDownVisitor> ();
         builder.Services.AddSingleton<RuleMarkDownVisitor> ();
         builder.Services.AddSingleton<ScreenMarkDownVisitor> ();
+        builder.Services.AddSingleton<FileContent> ();
         builder.Services.AddSingleton((serviceProvider) => { return o; });
 
         using IHost host = builder.Build();

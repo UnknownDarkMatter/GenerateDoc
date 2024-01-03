@@ -1,5 +1,6 @@
 ﻿using GenerateDoc.Business.Interfaces;
 using GenerateDoc.Entities;
+using GenerateDoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,13 @@ namespace GenerateDoc.Business.Implementation.CompositVisitor.MarkDown;
 
 public class TagMarkDownVisitor : ICompositeVisitor
 {
+    private FileContent _fileContent;
+    private int _identation = Constants.Identation;
+    public TagMarkDownVisitor(FileContent fileContent)
+    {
+        _fileContent = fileContent ?? throw new ArgumentNullException(nameof(fileContent));
+    }
+
     public void Initialize()
     {
 
@@ -19,8 +27,18 @@ public class TagMarkDownVisitor : ICompositeVisitor
 
     }
 
+    public void VisitCompositeElement(CompositeElement element)
+    {
+        var txt = $"{element.ElementDetails.ElementType}:{element.ElementDetails.Name}".ToString();
+        _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+        if (!string.IsNullOrWhiteSpace(element.ElementDetails.Description))
+        {
+            txt = $"  (Description : {element.ElementDetails.Description})".ToString();
+            _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+        }
+    }
 
-    public void VisitCompositeDefinition(CompositeDefinition definition)
+    public void VisitCompositeDefinition(dynamic definition)
     {
         throw new NotImplementedException();
     }
@@ -34,8 +52,4 @@ public class TagMarkDownVisitor : ICompositeVisitor
         throw new NotImplementedException();
     }
 
-    public void VisitCompositeElement(CompositeElement element)
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GenerateDoc.Entities;
 
-public class CompositeDefinition
+public abstract class CompositeDefinition
 {
     public int Level
     {
