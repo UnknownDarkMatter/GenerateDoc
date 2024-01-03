@@ -15,18 +15,21 @@ public class DocumentationGenerator : IDocumentationGenerator
     private readonly IFileSearcher _fileSearcher;
     private readonly ICompositeAggregator _compositeAggregator;
     private readonly VisitorFactory _visitorFactory;
+    private readonly FileContent _fileContent;
 
     public DocumentationGenerator(IFileSearcher fileSearcher, ICompositeAggregator compositeAggregator,
-        VisitorFactory visitorFactory)
+        VisitorFactory visitorFactory, FileContent fileContent)
     {
         _fileSearcher = fileSearcher ?? throw new ArgumentNullException(nameof(fileSearcher));
         _compositeAggregator = compositeAggregator ?? throw new ArgumentNullException(nameof(compositeAggregator));
         _visitorFactory = visitorFactory ?? throw new ArgumentNullException(nameof(visitorFactory));
+        _fileContent = fileContent ?? throw new ArgumentNullException(nameof(fileContent));
     }
 
     public void GenerateDocumentation(DocumentationFormatEnum documentationFormatEnum)
     {
         Console.WriteLine($"########### DEBUT #########");
+        _fileContent.Append("Documentation\r\n");
         var elements = _fileSearcher.FindAll();
         var elementsAggregated = _compositeAggregator.Aggregate(elements);
         var visitor = _visitorFactory.Create(documentationFormatEnum);
