@@ -8,5 +8,5 @@ namespace GenerateDoc;
 
 public static class Constants
 {
-    public static int Identation = 5;
+    public static int Identation = 2;
 }
