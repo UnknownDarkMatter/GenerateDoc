@@ -18,4 +18,9 @@ public static class StringUtils
         sb.Append(input);
         return sb.ToString();
     }
+
+    public static string LineBreak()
+    {
+        return "<br/>\r\n";
+    }
 }

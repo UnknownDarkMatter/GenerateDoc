@@ -40,16 +40,16 @@ public class TextVisitor : ICompositeVisitor
     public void VisitCompositeAggregation(CompositeAggregation aggregation)
     {
         var txt = $"Group:{aggregation.ElementDetails.Name}".ToString();
-        _sb.Append(txt.DoPadLeft((aggregation.PaddingLevel()) * _identation, ' ') + "\r\n");
+        _sb.Append(txt.DoPadLeft((aggregation.PaddingLevel()) * _identation, ' ') + StringUtils.LineBreak());
         foreach (var aggregated in aggregation.Children)
         {
             txt = $"-Group child : {aggregated.Key.ElementDetails.ElementType}:{aggregated.Key.ElementDetails.Name}".ToString();
-            _sb.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel()) * _identation, ' ') + "\r\n");
+            _sb.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel()) * _identation, ' ') + StringUtils.LineBreak());
 
             if (!string.IsNullOrWhiteSpace(aggregated.Key.ElementDetails.Description))
             {
                 txt = $"  (Description : {aggregated.Key.ElementDetails.Description})".ToString();
-                _sb.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+                _sb.Append(txt.DoPadLeft((aggregated.Key.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
             }
 
             foreach (var child in aggregated.Value)
@@ -69,11 +69,11 @@ public class TextVisitor : ICompositeVisitor
     public void VisitCompositeElement(CompositeElement element)
     {
         var txt = $"{element.ElementDetails.ElementType}:{element.ElementDetails.Name}".ToString();
-        _sb.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+        _sb.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
         if (!string.IsNullOrWhiteSpace(element.ElementDetails.Description))
         {
             txt = $"  (Description : {element.ElementDetails.Description})".ToString();
-            _sb.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+            _sb.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
         }
     }
 }

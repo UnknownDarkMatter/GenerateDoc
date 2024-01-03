@@ -2,6 +2,7 @@
 using GenerateDoc.Business.Interfaces;
 using GenerateDoc.Entities;
 using GenerateDoc.Infrastructure;
+using GenerateDoc.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ public class DocumentationGenerator : IDocumentationGenerator
     public void GenerateDocumentation(DocumentationFormatEnum documentationFormatEnum)
     {
         Console.WriteLine($"########### DEBUT #########");
-        _fileContent.Append("Documentation\r\n");
+        _fileContent.Append("Documentation" + StringUtils.LineBreak());
         var elements = _fileSearcher.FindAll();
         var elementsAggregated = _compositeAggregator.Aggregate(elements);
         var visitor = _visitorFactory.Create(documentationFormatEnum);

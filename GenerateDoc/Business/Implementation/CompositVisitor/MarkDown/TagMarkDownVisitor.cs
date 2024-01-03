@@ -36,12 +36,12 @@ public class TagMarkDownVisitor : ICompositeVisitor
 
         txt += $" [src]({MarkdownHelper.GenerateSourceCodeHyperLink(element.SourceCodeDetails, _commandLineOptions)})";
 
-        _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+        _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
 
         if (!string.IsNullOrWhiteSpace(element.ElementDetails.Description))
         {
             txt = $"  (Description : {element.ElementDetails.Description})".ToString();
-            _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+            _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
         }
     }
 

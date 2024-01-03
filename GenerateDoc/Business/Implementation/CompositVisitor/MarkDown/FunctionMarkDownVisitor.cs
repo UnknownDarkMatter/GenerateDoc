@@ -31,11 +31,11 @@ public class FunctionMarkDownVisitor : ICompositeVisitor
     public void VisitCompositeElement(CompositeElement element)
     {
         var txt = $"{element.ElementDetails.ElementType}:{element.ElementDetails.Name}".ToString();
-        _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+        _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
         if (!string.IsNullOrWhiteSpace(element.ElementDetails.Description))
         {
             txt = $"  (Description : {element.ElementDetails.Description})".ToString();
-            _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + "\r\n");
+            _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
         }
     }
     public void VisitCompositeDefinition(dynamic definition)
