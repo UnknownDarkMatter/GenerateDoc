@@ -13,7 +13,7 @@ public static class StringUtils
         var sb = new StringBuilder();
         for(int i = 0; i < nbCars; i++)
         {
-            sb.Append(pad);
+            sb.Append("&nbsp;");
         }
         sb.Append(input);
         return sb.ToString();
