@@ -31,7 +31,20 @@ public class FileSearcher : IFileSearcher
 
     private void AddOccurencies(DirectoryInfo di, List<CompositeDefinition> occurencies)
     {
-        foreach(var fi in di.GetFiles(_commandLineOptions.Pattern))
+        List<FileInfo> files;
+        if (_commandLineOptions.Pattern.Contains("|"))
+        {
+            var pattern = _commandLineOptions.Pattern.Split('|')
+                .Select(p => p.Substring(p.IndexOf("."), p.Length - p.IndexOf(".")));
+            files = di.GetFiles()
+                .Where(f => pattern.Any(p => f.FullName.EndsWith(p)) )
+                .ToList();
+        }
+        else
+        {
+            files = di.GetFiles(_commandLineOptions.Pattern).ToList();
+        }
+        foreach(var fi in files)
         {
             string fileContent = File.ReadAllText(fi.FullName);
             if (_elementParser.TryParseElement(fileContent, fi, 0, null, null, out CompositeDefinition element, out ElementDeclaration declaration))

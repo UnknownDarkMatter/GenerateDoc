@@ -21,7 +21,7 @@ public class CommandLineOptions
     [Option('f', "format", Required = true, HelpText = "Set format of the documentation : txt or md (markdown).")]
     public string Format { get; set; }
 
-    [Option('p', "pattern", Required = true, HelpText = "Set file pattern (*.*, *.cs ...).")]
+    [Option('p', "pattern", Required = true, HelpText = "Set file pattern (*.*, *.cs, *.cs|*.cshtml, ...). You can pass mutliple values separated by |.")]
     public string Pattern { get; set; }
 
 
