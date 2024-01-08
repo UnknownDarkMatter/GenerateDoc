@@ -38,7 +38,7 @@ public class BaseHtmlVisitor : ICompositeVisitor
         string title = string.IsNullOrWhiteSpace(element.ElementDetails.Description)
          ? element.ElementDetails.Name
          : element.ElementDetails.Description;
-        //title = element.ElementDetails.Name;
+        title = element.ElementDetails.Name;
 
         var txt = $"{element.ElementDetails.ElementType}:{title}";
 
@@ -59,10 +59,12 @@ public class BaseHtmlVisitor : ICompositeVisitor
     public static string GenerateWrappingStartingBlock(string title)
     {
         HtmlDomCount++;
-        var result = $"<div class=\"wrapper\" id=\"{HtmlDomCount}\"  data-toggle=\"collapse\" data-target=\"#{HtmlDomCount + 1}\">\r\n" +
-            $"  <div class=\"content\" id=\"{HtmlDomCount+1}\" class=\"collapse\">\r\n" +
-            $"      <div class=\"title\" id=\"{HtmlDomCount + 2}\">{title}\r\n" +
-            $"      </div>\r\n";
+        var result = $"<div class=\"wrapper\" id=\"{HtmlDomCount}\" >\r\n"
+            + (
+            string.IsNullOrWhiteSpace(title) 
+            ? $"      <button  type=\"button\" class=\"title\" id=\"{HtmlDomCount + 1}\">+/-</button>\r\n"
+            : $"      <button  type=\"button\" class=\"title\" id=\"{HtmlDomCount + 1}\">{title}</button>\r\n")
+            +$"  <div class=\"content\" id=\"{HtmlDomCount+2}\"  class=\"collapse in\" >\r\n";
         HtmlDomCount++;
         HtmlDomCount++;
         return result;

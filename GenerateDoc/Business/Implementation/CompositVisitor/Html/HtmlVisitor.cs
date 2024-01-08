@@ -39,6 +39,8 @@ public class HtmlVisitor : ICompositeVisitor
 <head>
 <style>
 .wrapper{
+display: flex;
+align-items: flex-start;
 margin-left:20px;
 }
 .content{
@@ -63,7 +65,15 @@ margin-left:20px;
         string path = Path.Combine(_commandLineOptions.OutputFolder, "doc.html");
 
         _fileContent.Append(
-            $"</body>\r\n"
+            @"
+<script>
+$('.title').click(function(e){
+    e.stopPropagation();
+    $('.content', $(this).parent()).slideToggle();
+});
+</script>
+"
+            + $"</body>\r\n"
             + $"<html>"
         );
 
@@ -109,8 +119,16 @@ margin-left:20px;
     {
         if(collection.Children.Count>1)
         {
-            var txt1 = BaseHtmlVisitor.GenerateWrappingStartingBlock("");
-            _fileContent.Append(txt1);
+            if(collection.Children.First() is CompositeElement e)
+            {
+                var txt1 = BaseHtmlVisitor.GenerateWrappingStartingBlock(e.ElementDetails.Name);
+                _fileContent.Append(txt1);
+            }
+            else
+            {
+                var txt1 = BaseHtmlVisitor.GenerateWrappingStartingBlock("");
+                _fileContent.Append(txt1);
+            }
         }
 
         foreach (var child in collection.Children)
