@@ -39,11 +39,13 @@ public class HtmlVisitor : ICompositeVisitor
 <head>
 <style>
 .wrapper{
-margin-left:30px;
+margin-left:20px;
 }
 .content{
+margin-left:20px;
 }
 .item{
+margin-left:20px;
 }
 </style>
 </head>
@@ -101,10 +103,16 @@ margin-left:30px;
 
     public void VisitCompositeCollection(CompositeCollection collection)
     {
+        var txt = BaseHtmlVisitor.GenerateWrappingStartingBlock("");
+        _fileContent.Append(txt);
+
         foreach (var child in collection.Children)
         {
             child.AcceptVisitor(this);
         }
+
+        txt = BaseHtmlVisitor.GenerateWrappingClosingBlock(txt);
+        _fileContent.Append(txt);
     }
 
     public void VisitCompositeElement(CompositeElement element)

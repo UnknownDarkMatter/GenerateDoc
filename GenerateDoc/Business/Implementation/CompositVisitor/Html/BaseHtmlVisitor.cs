@@ -37,7 +37,7 @@ public class BaseHtmlVisitor : ICompositeVisitor
         string title = string.IsNullOrWhiteSpace(element.ElementDetails.Description)
          ? element.ElementDetails.Name
          : element.ElementDetails.Description;
-        title = element.ElementDetails.Name;
+        //title = element.ElementDetails.Name;
 
         var txt = $"{element.ElementDetails.ElementType}:{title}";
 
