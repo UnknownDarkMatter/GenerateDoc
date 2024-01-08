@@ -10,15 +10,10 @@ using System.Threading.Tasks;
 
 namespace GenerateDoc.Business.Implementation.CompositVisitor.MarkDown;
 
-public class TagMarkDownVisitor : ICompositeVisitor
+public class TagMarkDownVisitor : BaseMarkDownVisitor
 {
-    private FileContent _fileContent;
-    private readonly CommandLineOptions _commandLineOptions;
-    private int _identation = Constants.Identation;
-    public TagMarkDownVisitor(FileContent fileContent, CommandLineOptions commandLineOptions)
+    public TagMarkDownVisitor(FileContent fileContent, CommandLineOptions commandLineOptions): base(fileContent, commandLineOptions)
     {
-        _fileContent = fileContent ?? throw new ArgumentNullException(nameof(fileContent));
-        _commandLineOptions = commandLineOptions ?? throw new ArgumentNullException(nameof(commandLineOptions));
     }
 
     public void Initialize()
@@ -32,17 +27,7 @@ public class TagMarkDownVisitor : ICompositeVisitor
 
     public void VisitCompositeElement(CompositeElement element)
     {
-        var txt = $"{element.ElementDetails.ElementType}:{element.ElementDetails.Name}".ToString();
-
-        txt += $" [src]({MarkdownHelper.GenerateSourceCodeHyperLink(element.SourceCodeDetails, _commandLineOptions)})";
-
-        _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
-
-        if (!string.IsNullOrWhiteSpace(element.ElementDetails.Description))
-        {
-            txt = $"  (Description : {element.ElementDetails.Description})".ToString();
-            _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
-        }
+        base.VisitCompositeElement(element);
     }
 
     public void VisitCompositeDefinition(dynamic definition)

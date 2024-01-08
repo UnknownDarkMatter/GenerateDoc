@@ -8,12 +8,12 @@ namespace GenerateDoc.Utils;
 
 public static class StringUtils
 {
-    public static string DoPadLeft(this string input, int nbCars, char pad)
+    public static string DoPadLeft(this string input, int nbCars, string pad)
     {
         var sb = new StringBuilder();
         for(int i = 0; i < nbCars; i++)
         {
-            sb.Append("&nbsp;");
+            sb.Append(pad);
         }
         sb.Append(input);
         return sb.ToString();

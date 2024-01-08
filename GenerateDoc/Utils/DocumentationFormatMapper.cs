@@ -21,6 +21,10 @@ public static class DocumentationFormatMapper
                 {
                     return DocumentationFormatEnum.MarkDown;
                 }
+            case "html":
+                {
+                    return DocumentationFormatEnum.Html;
+                }
             default:
                 {
                     throw new NotSupportedException(format);

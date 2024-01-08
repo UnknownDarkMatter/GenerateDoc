@@ -18,6 +18,7 @@ namespace GenerateDoc.Entities
     public enum DocumentationFormatEnum
     {
         Text = 1,
-        MarkDown = 2
+        MarkDown = 2,
+        Html = 3
     }
 }

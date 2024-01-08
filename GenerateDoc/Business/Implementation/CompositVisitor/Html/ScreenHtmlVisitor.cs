@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace GenerateDoc.Business.Implementation.CompositVisitor.MarkDown;
 
-public class ScreenMarkDownVisitor : BaseMarkDownVisitor
+public class ScreenHtmlVisitor : BaseHtmlVisitor
 {
-    public ScreenMarkDownVisitor(FileContent fileContent, CommandLineOptions commandLineOptions) : base(fileContent, commandLineOptions)
+    public ScreenHtmlVisitor(FileContent fileContent, CommandLineOptions commandLineOptions): base(fileContent, commandLineOptions)
     {
     }
 

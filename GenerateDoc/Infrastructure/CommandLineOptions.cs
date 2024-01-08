@@ -18,7 +18,7 @@ public class CommandLineOptions
     [Option('d', "devops", Required = true, HelpText = "Set base url with ending url encoded slash of devops url.")]
     public string DevOpsUrl { get; set; }
 
-    [Option('f', "format", Required = true, HelpText = "Set format of the documentation : txt or md (markdown).")]
+    [Option('f', "format", Required = true, HelpText = "Set format of the documentation : txt, md (markdown) or html.")]
     public string Format { get; set; }
 
     [Option('p', "pattern", Required = true, HelpText = "Set file pattern (*.*, *.cs, *.cs|*.cshtml, ...). You can pass mutliple values separated by |.")]

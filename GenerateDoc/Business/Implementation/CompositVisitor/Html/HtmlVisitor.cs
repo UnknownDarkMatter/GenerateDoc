@@ -10,35 +10,57 @@ using System.Threading.Tasks;
 
 namespace GenerateDoc.Business.Implementation.CompositVisitor.MarkDown;
 
-public class MarkDownVisitor : ICompositeVisitor
+public class HtmlVisitor : ICompositeVisitor
 {
-    private TagMarkDownVisitor _tagMarkDownVisitor;
-    private ScreenMarkDownVisitor _screenMarkDownVisitor;
-    private RuleMarkDownVisitor _ruleMarkDownVisitor;
-    private FunctionMarkDownVisitor _functionMarkDownVisitor;
+    private TagHtmlVisitor _tagHtmlVisitor;
+    private ScreenHtmlVisitor _screenHtmlVisitor;
+    private RuleHtmlVisitor _ruleHtmlVisitor;
+    private FunctionHtmlVisitor _functionHtmlVisitor;
 
     private CommandLineOptions _commandLineOptions;
     private FileContent _fileContent;
     private int _identation = Constants.Identation;
 
-    public MarkDownVisitor(TagMarkDownVisitor tagMarkDownVisitor, ScreenMarkDownVisitor screenMarkDownVisitor,
-        RuleMarkDownVisitor ruleMarkDownVisitor, FunctionMarkDownVisitor functionMarkDownVisitor,
+    public HtmlVisitor(TagHtmlVisitor tagHtmlVisitor, ScreenHtmlVisitor screenHtmlVisitor,
+        RuleHtmlVisitor ruleHtmlVisitor, FunctionHtmlVisitor functionHtmlVisitor,
         CommandLineOptions commandLineOptions, FileContent fileContent)
     {
-        _tagMarkDownVisitor = tagMarkDownVisitor ?? throw new ArgumentNullException(nameof(tagMarkDownVisitor));
-        _screenMarkDownVisitor = screenMarkDownVisitor ?? throw new ArgumentNullException(nameof(screenMarkDownVisitor));
-        _ruleMarkDownVisitor = ruleMarkDownVisitor ?? throw new ArgumentNullException(nameof(ruleMarkDownVisitor));
-        _functionMarkDownVisitor = functionMarkDownVisitor ?? throw new ArgumentNullException(nameof(functionMarkDownVisitor));
+        _tagHtmlVisitor = tagHtmlVisitor ?? throw new ArgumentNullException(nameof(tagHtmlVisitor));
+        _screenHtmlVisitor = screenHtmlVisitor ?? throw new ArgumentNullException(nameof(screenHtmlVisitor));
+        _ruleHtmlVisitor = ruleHtmlVisitor ?? throw new ArgumentNullException(nameof(ruleHtmlVisitor));
+        _functionHtmlVisitor = functionHtmlVisitor ?? throw new ArgumentNullException(nameof(functionHtmlVisitor));
         _commandLineOptions = commandLineOptions ?? throw new ArgumentNullException(nameof(commandLineOptions));
         _fileContent = fileContent;
     }
     public void Initialize()
     {
-        _fileContent.Append("Documentation" + StringUtils.LineBreak());
+        _fileContent.Append(
+            @"<html>\r\n
+<head>
+<style>
+.wrapper{
+margin-left:30px;
+}
+.content{
+}
+.item{
+}
+</style>
+</head>
+"
+            + $"<body>\r\n"
+            + $"<h1>Documentation</h1>\r\n"
+            );
     }
     public void Terminate()
     {
-        string path = Path.Combine(_commandLineOptions.OutputFolder, "doc.md");
+        string path = Path.Combine(_commandLineOptions.OutputFolder, "doc.html");
+
+        _fileContent.Append(
+            $"</body>\r\n"
+            + $"<html>"
+        );
+
         var fileContent = _fileContent.ToString();
         File.WriteAllText(path, fileContent);
     }
@@ -57,8 +79,11 @@ public class MarkDownVisitor : ICompositeVisitor
 
     public void VisitCompositeAggregation(CompositeAggregation aggregation)
     {
-        var txt = $"{aggregation.ElementDetails.Name}".ToString();
-        _fileContent.Append(txt.DoPadLeft((aggregation.PaddingLevel()) * _identation, Constants.PadMarkdown) + StringUtils.LineBreak());
+        var txt = $"{aggregation.ElementDetails.Name}";
+
+        txt = BaseHtmlVisitor.GenerateWrappingStartingBlock(txt) ;
+        _fileContent.Append(txt);
+
         foreach (var aggregated in aggregation.Children)
         {
             VisitCompositeElement(aggregated.Key);
@@ -68,6 +93,10 @@ public class MarkDownVisitor : ICompositeVisitor
                 child.AcceptVisitor(this);
             }
         }
+
+        txt = BaseHtmlVisitor.GenerateWrappingClosingBlock(txt);
+        _fileContent.Append(txt);
+
     }
 
     public void VisitCompositeCollection(CompositeCollection collection)
@@ -84,22 +113,22 @@ public class MarkDownVisitor : ICompositeVisitor
         {
             case ElementTypeEnum.Screen:
                 {
-                    _screenMarkDownVisitor.VisitCompositeElement(element);
+                    _screenHtmlVisitor.VisitCompositeElement(element);
                     break;
                 }
             case ElementTypeEnum.Function:
                 {
-                    _functionMarkDownVisitor.VisitCompositeElement(element);
+                    _functionHtmlVisitor.VisitCompositeElement(element);
                     break;
                 }
             case ElementTypeEnum.Rule:
                 {
-                    _ruleMarkDownVisitor.VisitCompositeElement(element);
+                    _ruleHtmlVisitor.VisitCompositeElement(element);
                     break;
                 }
             case ElementTypeEnum.Tag:
                 {
-                    _tagMarkDownVisitor.VisitCompositeElement(element);
+                    _tagHtmlVisitor.VisitCompositeElement(element);
                     break;
                 }
             default:

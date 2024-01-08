@@ -40,6 +40,11 @@ Parser.Default.ParseArguments<CommandLineOptions>(args)
         builder.Services.AddSingleton<FunctionMarkDownVisitor> ();
         builder.Services.AddSingleton<RuleMarkDownVisitor> ();
         builder.Services.AddSingleton<ScreenMarkDownVisitor> ();
+        builder.Services.AddSingleton<HtmlVisitor>();
+        builder.Services.AddSingleton<TagHtmlVisitor>();
+        builder.Services.AddSingleton<FunctionHtmlVisitor>();
+        builder.Services.AddSingleton<RuleHtmlVisitor>();
+        builder.Services.AddSingleton<ScreenHtmlVisitor>();
         builder.Services.AddSingleton<FileContent> ();
         builder.Services.AddSingleton((serviceProvider) => { return o; });
 

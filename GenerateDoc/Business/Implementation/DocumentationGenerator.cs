@@ -30,7 +30,6 @@ public class DocumentationGenerator : IDocumentationGenerator
     public void GenerateDocumentation(DocumentationFormatEnum documentationFormatEnum)
     {
         Console.WriteLine($"########### DEBUT #########");
-        _fileContent.Append("Documentation" + StringUtils.LineBreak());
         var elements = _fileSearcher.FindAll();
         var elementsAggregated = _compositeAggregator.Aggregate(elements);
         var visitor = _visitorFactory.Create(documentationFormatEnum);

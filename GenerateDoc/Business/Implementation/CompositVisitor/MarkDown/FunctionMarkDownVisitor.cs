@@ -1,5 +1,6 @@
 ﻿using GenerateDoc.Business.Interfaces;
 using GenerateDoc.Entities;
+using GenerateDoc.Infrastructure;
 using GenerateDoc.Utils;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,10 @@ using System.Threading.Tasks;
 
 namespace GenerateDoc.Business.Implementation.CompositVisitor.MarkDown;
 
-public class FunctionMarkDownVisitor : ICompositeVisitor
+public class FunctionMarkDownVisitor : BaseMarkDownVisitor
 {
-    private FileContent _fileContent; 
-    private int _identation = Constants.Identation;
-
-    public FunctionMarkDownVisitor(FileContent fileContent)
+    public FunctionMarkDownVisitor(FileContent fileContent, CommandLineOptions commandLineOptions) : base(fileContent, commandLineOptions)
     {
-        _fileContent = fileContent ?? throw new ArgumentNullException(nameof(fileContent));
     }
 
     public void Initialize()
@@ -30,14 +27,9 @@ public class FunctionMarkDownVisitor : ICompositeVisitor
 
     public void VisitCompositeElement(CompositeElement element)
     {
-        var txt = $"{element.ElementDetails.ElementType}:{element.ElementDetails.Name}".ToString();
-        _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
-        if (!string.IsNullOrWhiteSpace(element.ElementDetails.Description))
-        {
-            txt = $"  (Description : {element.ElementDetails.Description})".ToString();
-            _fileContent.Append(txt.DoPadLeft((element.PaddingLevel() + 1) * _identation, ' ') + StringUtils.LineBreak());
-        }
+        base.VisitCompositeElement(element);
     }
+
     public void VisitCompositeDefinition(dynamic definition)
     {
         throw new NotImplementedException();
@@ -51,5 +43,4 @@ public class FunctionMarkDownVisitor : ICompositeVisitor
     {
         throw new NotImplementedException();
     }
-
 }

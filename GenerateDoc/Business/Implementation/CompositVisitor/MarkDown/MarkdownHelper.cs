@@ -12,6 +12,7 @@ public static class MarkdownHelper
 {
     public static string GenerateSourceCodeHyperLink(SourceCodeDetails sourceCodeDetails, CommandLineOptions commandLineOptions)
     {
+        return "";
         string hyperLink = commandLineOptions.DevOpsUrl;
         string path = sourceCodeDetails.File.FullName.Substring(commandLineOptions.SourceFolder.Length);
         path = path.Replace("/", "\\");

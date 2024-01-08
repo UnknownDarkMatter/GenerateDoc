@@ -13,10 +13,12 @@ public class VisitorFactory
 {
     private TextVisitor _textVisitor;
     private MarkDownVisitor _markDownVisitor;
-    public VisitorFactory(TextVisitor textVisitor, MarkDownVisitor markDownVisitor)
+    private HtmlVisitor _htmlVisitor;
+    public VisitorFactory(TextVisitor textVisitor, MarkDownVisitor markDownVisitor, HtmlVisitor htmlVisitor)
     {
         _textVisitor = textVisitor ?? throw new ArgumentNullException(nameof(textVisitor));
         _markDownVisitor = markDownVisitor ?? throw new ArgumentNullException(nameof(markDownVisitor));
+        _htmlVisitor = htmlVisitor ?? throw new ArgumentNullException(nameof(htmlVisitor));
     }
 
     public ICompositeVisitor Create(DocumentationFormatEnum documentationFormatEnum)
@@ -30,6 +32,10 @@ public class VisitorFactory
             case DocumentationFormatEnum.MarkDown:
                 {
                     return _markDownVisitor;
+                }
+            case DocumentationFormatEnum.Html:
+                {
+                    return _htmlVisitor;
                 }
             default:
                 {
