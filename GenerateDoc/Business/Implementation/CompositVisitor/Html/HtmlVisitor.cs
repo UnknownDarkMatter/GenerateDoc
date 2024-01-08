@@ -48,6 +48,10 @@ margin-left:20px;
 margin-left:20px;
 }
 </style>
+  <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+  <link rel=""stylesheet"" href=""https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"">
+  <script src=""https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js""></script>
+  <script src=""https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js""></script>
 </head>
 "
             + $"<body>\r\n"
@@ -103,16 +107,22 @@ margin-left:20px;
 
     public void VisitCompositeCollection(CompositeCollection collection)
     {
-        var txt = BaseHtmlVisitor.GenerateWrappingStartingBlock("");
-        _fileContent.Append(txt);
+        if(collection.Children.Count>1)
+        {
+            var txt1 = BaseHtmlVisitor.GenerateWrappingStartingBlock("");
+            _fileContent.Append(txt1);
+        }
 
         foreach (var child in collection.Children)
         {
             child.AcceptVisitor(this);
         }
 
-        txt = BaseHtmlVisitor.GenerateWrappingClosingBlock(txt);
-        _fileContent.Append(txt);
+        if (collection.Children.Count > 1)
+        {
+            var txt2 = BaseHtmlVisitor.GenerateWrappingClosingBlock("");
+            _fileContent.Append(txt2);
+        }
     }
 
     public void VisitCompositeElement(CompositeElement element)

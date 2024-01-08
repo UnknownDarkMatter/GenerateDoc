@@ -15,6 +15,7 @@ public class BaseHtmlVisitor : ICompositeVisitor
     protected FileContent _fileContent;
     protected readonly CommandLineOptions _commandLineOptions;
     protected int _identation = Constants.Identation;
+    public static int HtmlDomCount = 0;
 
     public BaseHtmlVisitor(FileContent fileContent, CommandLineOptions commandLineOptions)
     {
@@ -57,10 +58,14 @@ public class BaseHtmlVisitor : ICompositeVisitor
 
     public static string GenerateWrappingStartingBlock(string title)
     {
-        return $"<div class=\"wrapper\">\r\n" +
-            $"  <div class=\"content\">\r\n" +
-            $"      <div class=\"title\">{title}\r\n" +
+        HtmlDomCount++;
+        var result = $"<div class=\"wrapper\" id=\"{HtmlDomCount}\"  data-toggle=\"collapse\" data-target=\"#{HtmlDomCount + 1}\">\r\n" +
+            $"  <div class=\"content\" id=\"{HtmlDomCount+1}\" class=\"collapse\">\r\n" +
+            $"      <div class=\"title\" id=\"{HtmlDomCount + 2}\">{title}\r\n" +
             $"      </div>\r\n";
+        HtmlDomCount++;
+        HtmlDomCount++;
+        return result;
     }
 
     public static string GenerateWrappingClosingBlock(string content)
@@ -70,7 +75,8 @@ public class BaseHtmlVisitor : ICompositeVisitor
 
     public static string GenerateContentBlock(string content)
     {
-        return $"<div class=\"item\">{content}</div>\r\n";
+        HtmlDomCount++;
+        return $"<div class=\"item\" id=\"{HtmlDomCount}\">{content}</div>\r\n";
     }
 
     public void VisitCompositeAggregation(CompositeAggregation aggregation)
