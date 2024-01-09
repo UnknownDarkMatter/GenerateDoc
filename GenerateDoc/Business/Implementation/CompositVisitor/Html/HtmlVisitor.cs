@@ -124,6 +124,11 @@ $('.title').click(function(e){
                 var txt1 = BaseHtmlVisitor.GenerateWrappingStartingBlock(e.ElementDetails.Name);
                 _fileContent.Append(txt1);
             }
+            else if (collection.Children.First() is CompositeAggregation a)
+            {
+                var txt1 = BaseHtmlVisitor.GenerateWrappingStartingBlock(a.ElementDetails.Name);
+                _fileContent.Append(txt1);
+            }
             else
             {
                 var txt1 = BaseHtmlVisitor.GenerateWrappingStartingBlock("");
