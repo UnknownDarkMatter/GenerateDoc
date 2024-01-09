@@ -34,6 +34,10 @@ public class BaseMarkDownVisitor : ICompositeVisitor
 
     public void VisitCompositeElement(CompositeElement element)
     {
+        if (string.IsNullOrWhiteSpace(element.ElementDetails.Description))
+        {
+            return;
+        }
         string title = string.IsNullOrWhiteSpace(element.ElementDetails.Description)
             ? element.ElementDetails.Name
             : element.ElementDetails.Description;
