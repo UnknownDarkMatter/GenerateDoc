@@ -52,4 +52,16 @@ public class CompositeCollection : CompositeDefinition
         return result;
     }
 
+    public override bool ContainsCompositeElement()
+    {
+        foreach (var child in Children)
+        {
+            if (child.ContainsCompositeElement())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -50,5 +50,9 @@ public class CompositeAggregation : CompositeDefinition
     {
         return $"Group : {ElementDetails}";
     }
+    public override bool ContainsCompositeElement()
+    {
+        return Children.Values.Any();
+    }
 
 }

@@ -63,8 +63,9 @@ public class CompositeAggregator : ICompositeAggregator
                 element.Parent = rootAsCollection;
             }
         }
-        var aggregatedComposite = new CompositeCollection(null);
+        CompositeDefinition aggregatedComposite = new CompositeCollection(null);
         Aggregate(root, aggregatedComposite, null);
+        aggregatedComposite = RemoveEmptyElements(aggregatedComposite);
         return aggregatedComposite;
     }
 
@@ -277,5 +278,50 @@ public class CompositeAggregator : ICompositeAggregator
         }
     }
 
+    private CompositeDefinition RemoveEmptyElements(dynamic currentElement)
+    {
+        if (currentElement is CompositeElement e)
+        {
+            return e;
+        }
+        else if (currentElement is CompositeCollection c)
+        {
+            int i = 0;
+            while(i < c.Children.Count)
+            {
+                if (!c.Children[i].ContainsCompositeElement())
+                {
+                    c.Children.Remove(c.Children[i]);
+                }
+                else
+                {
+                    RemoveEmptyElements(c.Children[i]);
+                    i++;
+                }
+            }
+            return c;
+        }
+        else if (currentElement is CompositeAggregation a)
+        {
+            int i = 0;
+            while (i < a.Children.Keys.Count)
+            {
+                var key = a.Children.Keys.ToList()[i];
+                int j = 0;
+                while (j < a.Children[key].Count)
+                {
+                    RemoveEmptyElements(a.Children[key][j]);
+                    j++;
+                }
+                i++;
+            }
+
+            return a;
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 }

@@ -35,19 +35,19 @@ public class HtmlVisitor : ICompositeVisitor
     public void Initialize()
     {
         _fileContent.Append(
-            @"<html>\r\n
+            @"<html>
 <head>
 <style>
 .wrapper{
 display: flex;
 align-items: flex-start;
-margin-left:20px;
+margin-left:10px;
 }
 .content{
-margin-left:20px;
+margin-left:10px;
 }
 .item{
-margin-left:20px;
+margin-left:10px;
 }
 </style>
   <meta name=""viewport"" content=""width=device-width, initial-scale=1"">

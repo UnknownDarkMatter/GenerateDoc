@@ -77,4 +77,6 @@ public abstract class CompositeDefinition
         return base.ToString();
     }
 
+    public abstract bool ContainsCompositeElement();
+
 }

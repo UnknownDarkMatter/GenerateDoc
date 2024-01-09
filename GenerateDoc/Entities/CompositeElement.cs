@@ -40,4 +40,9 @@ public class CompositeElement : CompositeDefinition
         return $"{ElementDetails}{(HasChildren ? "(has childs)" : "")}".PadLeft(Level * 3, ' ');
     }
 
+    public override bool ContainsCompositeElement()
+    {
+        return true;
+    }
+
 }
